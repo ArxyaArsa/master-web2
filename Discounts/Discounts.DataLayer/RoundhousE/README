@@ -1,0 +1,3 @@
+In order to use the roundhouse tool please run installRoundHouse.bat
+
+Before running _db_build.bat please update the connection string parameters within the batch file.
