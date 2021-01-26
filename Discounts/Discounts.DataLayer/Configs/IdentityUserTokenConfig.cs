@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Discounts.DataLayer.Helpers;
+using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
@@ -21,7 +22,7 @@ namespace Discounts.DataLayer.Configs
 
             builder.ToTable("AspNetUserTokens");
 
-            builder.HasOne(typeof(IdentityUser<int>))
+            builder.HasOne(typeof(DiscountsUser))
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

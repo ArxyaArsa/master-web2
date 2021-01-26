@@ -1,5 +1,6 @@
 ﻿using Discounts.DataLayer.Configs;
 using Discounts.DataLayer.Helpers;
+using Discounts.DataLayer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace Discounts.DataLayer
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    public class ApplicationDbContext : IdentityDbContext<DiscountsUser, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

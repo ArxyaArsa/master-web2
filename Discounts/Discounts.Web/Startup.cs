@@ -1,4 +1,5 @@
 ﻿using Discounts.DataLayer;
+using Discounts.DataLayer.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@ namespace Discounts.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DiscountsConnection")));
-            services.AddDefaultIdentity<IdentityUser<int>>()
+            services.AddDefaultIdentity<DiscountsUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

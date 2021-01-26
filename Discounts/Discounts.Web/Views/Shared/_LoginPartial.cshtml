@@ -1,7 +1,8 @@
 @using Microsoft.AspNetCore.Identity
+@using Discounts.DataLayer.Models
 
-@inject SignInManager<IdentityUser<int>> SignInManager
-@inject UserManager<IdentityUser<int>> UserManager
+@inject SignInManager<DiscountsUser> SignInManager
+@inject UserManager<DiscountsUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Discounts.DataLayer.Helpers;
+using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
-    public class IdentityUserConfig : IEntityTypeConfiguration<IdentityUser<int>>
+    public class IdentityUserConfig : IEntityTypeConfiguration<DiscountsUser>
     {
-        public void Configure(EntityTypeBuilder<IdentityUser<int>> builder)
+        public void Configure(EntityTypeBuilder<DiscountsUser> builder)
         {
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd()
