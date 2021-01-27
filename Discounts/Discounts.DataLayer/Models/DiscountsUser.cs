@@ -7,5 +7,9 @@ namespace Discounts.DataLayer.Models
 {
     public class DiscountsUser : IdentityUser<int>
     {
+        public int? PartnerId { get; set; }
+
+        public virtual Partner Partner { get; set; }
+        public virtual ICollection<UsedAction> UsedActions { get; set; }
     }
 }

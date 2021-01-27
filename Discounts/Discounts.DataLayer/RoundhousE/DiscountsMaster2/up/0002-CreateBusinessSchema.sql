@@ -12,13 +12,11 @@ BEGIN
     CREATE TABLE [Partner] (
         [Id] INT NOT NULL IDENTITY(1,1),
         [PartnerTypeId] INT NOT NULL,
-        [UserId] INT NOT NULL,
         [Name] NVARCHAR(250) NULL,
         [StartDate] DATETIME NULL,
         [EndDate] DATETIME NULL,
         CONSTRAINT [PK_Partner] PRIMARY KEY CLUSTERED ([Id]),
-        CONSTRAINT [FK_Partner_CompanyType_CompanyTypeId] FOREIGN KEY ([PartnerTypeId]) REFERENCES [PartnerType] ([Id]),
-        CONSTRAINT [FK_Partner_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id])
+        CONSTRAINT [FK_Partner_PartnerType_PartnerTypeId] FOREIGN KEY ([PartnerTypeId]) REFERENCES [PartnerType] ([Id])
     );
 END;
 
@@ -64,7 +62,7 @@ BEGIN
         CONSTRAINT [PK_UsedAction] PRIMARY KEY CLUSTERED ([Id]),
         CONSTRAINT [FK_UsedAction_Partner_PartnerId] FOREIGN KEY ([PartnerId]) REFERENCES [Partner] ([Id]),
         CONSTRAINT [FK_UsedAction_Action_ActionId] FOREIGN KEY ([ActionId]) REFERENCES [Action] ([Id]),
-        CONSTRAINT [FK_UsedAction_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id])
+        CONSTRAINT [FK_UsedAction_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id])
     );
 END;
 
@@ -81,7 +79,7 @@ END;
 -- DROP CONSTRAINT [FK_AspNetUsers_Partner_PartnerId];
 -- 
 -- ALTER TABLE [AspNetUsers]
--- DROP [PartnerId];
+-- DROP COLUMN [PartnerId];
 -- 
 -- DROP TABLE IF EXISTS [UsedAction];
 -- DROP TABLE IF EXISTS [PartnerActionMap];

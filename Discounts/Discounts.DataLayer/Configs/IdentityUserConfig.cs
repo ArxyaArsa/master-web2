@@ -27,6 +27,7 @@ namespace Discounts.DataLayer.Configs
             builder.Property(x => x.PhoneNumberConfirmed);
             builder.Property(x => x.SecurityStamp);
             builder.Property(x => x.TwoFactorEnabled);
+            builder.Property(x => x.PartnerId);
             builder.Property(x => x.UserName).HasMaxLength(256);
 
             builder.HasKey(x => x.Id);
@@ -35,6 +36,10 @@ namespace Discounts.DataLayer.Configs
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+            builder.HasOne(x => x.Partner)
+                        .WithMany(x => x.Users)
+                        .HasForeignKey(x => x.PartnerId);
 
             builder.ToTable("AspNetUsers");
         }
