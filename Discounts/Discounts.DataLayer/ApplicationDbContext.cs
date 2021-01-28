@@ -13,6 +13,8 @@ namespace Discounts.DataLayer
 {
     public class ApplicationDbContext : IdentityDbContext<DiscountsUser, IdentityRole<int>, int>
     {
+        public DbSet<DiscountsUser> DiscountUser { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -32,6 +34,12 @@ namespace Discounts.DataLayer
             modelBuilder.ApplyConfiguration(new IdentityUserLoginConfig());
             modelBuilder.ApplyConfiguration(new IdentityUserRoleConfig());
             modelBuilder.ApplyConfiguration(new IdentityUserTokenConfig());
+
+            modelBuilder.ApplyConfiguration(new ActionConfig());
+            modelBuilder.ApplyConfiguration(new PartnerActionMapConfig());
+            modelBuilder.ApplyConfiguration(new PartnerTypeConfig());
+            modelBuilder.ApplyConfiguration(new PartnerConfig());
+            modelBuilder.ApplyConfiguration(new UsedActionConfig());
 
             base.OnModelCreating(modelBuilder);
         }
