@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Applications\local.discounts.com</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="Areas/Admin/Views/Users/Create.cshtml">
+      <publishTime>01/28/2021 01:45:50</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Users/Index.cshtml">
+      <publishTime>01/28/2021 01:48:34</publishTime>
+    </File>
+    <File Include="web.config">
+      <publishTime>01/28/2021 01:44:39</publishTime>
+    </File>
+  </ItemGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DiscountsConnection">
+      <Value>Server=127.0.0.1%3bDatabase=DiscountsMaster2%3bUser Id=master-web-2%3bPassword=master-web-2%3bTrusted_Connection=True%3bMultipleActiveResultSets=true</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

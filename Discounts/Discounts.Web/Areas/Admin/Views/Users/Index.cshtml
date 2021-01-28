@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Discounts.DataLayer.Models.DiscountsUser>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-area="Admin" asp-controller="Users" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Partner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailConfirmed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LockoutEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LockoutEnabled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccessFailedCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Partner.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LockoutEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LockoutEnabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccessFailedCount)
+            </td>
+            <td>
+                <a asp-area="Admin" asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-area="Admin" asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
