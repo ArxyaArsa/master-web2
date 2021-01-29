@@ -14,6 +14,6 @@ namespace Discounts.DataLayer.Models
         
         public virtual DiscountsUser User { get; set; }
         public virtual Partner Partner { get; set; }
-        public virtual Action Action { get; set; }
+        public virtual DiscountAction Action { get; set; }
     }
 }

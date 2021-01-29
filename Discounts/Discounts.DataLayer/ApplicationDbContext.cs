@@ -14,6 +14,11 @@ namespace Discounts.DataLayer
     public class ApplicationDbContext : IdentityDbContext<DiscountsUser, IdentityRole<int>, int>
     {
         public DbSet<DiscountsUser> DiscountUser { get; set; }
+        public DbSet<Partner> Partner { get; set; }
+        public DbSet<DiscountAction> DiscountAction { get; set; }
+        public DbSet<PartnerType> PartnerType { get; set; }
+        public DbSet<PartnerActionMap> PartnerActionMap { get; set; }
+        public DbSet<UsedAction> UsedAction { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -35,7 +40,7 @@ namespace Discounts.DataLayer
             modelBuilder.ApplyConfiguration(new IdentityUserRoleConfig());
             modelBuilder.ApplyConfiguration(new IdentityUserTokenConfig());
 
-            modelBuilder.ApplyConfiguration(new ActionConfig());
+            modelBuilder.ApplyConfiguration(new DiscountActionConfig());
             modelBuilder.ApplyConfiguration(new PartnerActionMapConfig());
             modelBuilder.ApplyConfiguration(new PartnerTypeConfig());
             modelBuilder.ApplyConfiguration(new PartnerConfig());

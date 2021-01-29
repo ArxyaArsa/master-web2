@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Discounts.DataLayer.Models
 {
-    public class Action
+    public class DiscountAction
     {
         public int Id { get; set; }
         public string Name { get; set; }

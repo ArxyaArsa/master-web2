@@ -12,6 +12,6 @@ namespace Discounts.DataLayer.Models
         public DateTime? CreatedDate { get; set; }
 
         public virtual Partner Partner { get; set; }
-        public virtual Action Action { get; set; }
+        public virtual DiscountAction Action { get; set; }
     }
 }

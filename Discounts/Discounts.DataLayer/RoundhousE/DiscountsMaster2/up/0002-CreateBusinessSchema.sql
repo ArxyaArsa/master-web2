@@ -86,3 +86,5 @@ END;
 -- DROP TABLE IF EXISTS [Action];
 -- DROP TABLE IF EXISTS [Partner];
 -- DROP TABLE IF EXISTS [PartnerType];
+
+-- DELETE FROM RoundhousE.ScriptsRun WHERE script_name = '0002-CreateBusinessSchema.sql'

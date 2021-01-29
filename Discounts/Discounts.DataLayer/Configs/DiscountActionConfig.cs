@@ -7,9 +7,9 @@ using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
-    public class ActionConfig : IEntityTypeConfiguration<Action>
+    public class DiscountActionConfig : IEntityTypeConfiguration<DiscountAction>
     {
-        public void Configure(EntityTypeBuilder<Action> builder)
+        public void Configure(EntityTypeBuilder<DiscountAction> builder)
         {
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd()

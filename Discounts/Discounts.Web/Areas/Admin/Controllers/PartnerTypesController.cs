@@ -11,23 +11,22 @@ using Discounts.DataLayer.Models;
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class UsersController : Controller
+    public class PartnerTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsersController(ApplicationDbContext context)
+        public PartnerTypesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Users
+        // GET: Admin/PartnerTypes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.DiscountUser.Include(d => d.Partner);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.PartnerType.ToListAsync());
         }
 
-        // GET: Admin/Users/Details/5
+        // GET: Admin/PartnerTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,42 +34,39 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
-                .Include(d => d.Partner)
+            var partnerType = await _context.PartnerType
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            if (partnerType == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(partnerType);
         }
 
-        // GET: Admin/Users/Create
+        // GET: Admin/PartnerTypes/Create
         public IActionResult Create()
         {
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name");
             return View();
         }
 
-        // POST: Admin/Users/Create
+        // POST: Admin/PartnerTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Create([Bind("Id,Name")] PartnerType partnerType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(discountsUser);
+                _context.Add(partnerType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            return View(partnerType);
         }
 
-        // GET: Admin/Users/Edit/5
+        // GET: Admin/PartnerTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,23 +74,22 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            if (discountsUser == null)
+            var partnerType = await _context.PartnerType.FindAsync(id);
+            if (partnerType == null)
             {
                 return NotFound();
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            return View(partnerType);
         }
 
-        // POST: Admin/Users/Edit/5
+        // POST: Admin/PartnerTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] PartnerType partnerType)
         {
-            if (id != discountsUser.Id)
+            if (id != partnerType.Id)
             {
                 return NotFound();
             }
@@ -103,12 +98,12 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(discountsUser);
+                    _context.Update(partnerType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DiscountsUserExists(discountsUser.Id))
+                    if (!PartnerTypeExists(partnerType.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +114,10 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            return View(partnerType);
         }
 
-        // GET: Admin/Users/Delete/5
+        // GET: Admin/PartnerTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,31 +125,30 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
-                .Include(d => d.Partner)
+            var partnerType = await _context.PartnerType
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            if (partnerType == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(partnerType);
         }
 
-        // POST: Admin/Users/Delete/5
+        // POST: Admin/PartnerTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            _context.DiscountUser.Remove(discountsUser);
+            var partnerType = await _context.PartnerType.FindAsync(id);
+            _context.PartnerType.Remove(partnerType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DiscountsUserExists(int id)
+        private bool PartnerTypeExists(int id)
         {
-            return _context.DiscountUser.Any(e => e.Id == id);
+            return _context.PartnerType.Any(e => e.Id == id);
         }
     }
 }

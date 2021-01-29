@@ -11,23 +11,23 @@ using Discounts.DataLayer.Models;
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class UsersController : Controller
+    public class PartnerActionMapController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsersController(ApplicationDbContext context)
+        public PartnerActionMapController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Users
+        // GET: Admin/PartnerActionMap
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.DiscountUser.Include(d => d.Partner);
+            var applicationDbContext = _context.PartnerActionMap.Include(p => p.Action).Include(p => p.Partner);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Admin/Users/Details/5
+        // GET: Admin/PartnerActionMap/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,42 +35,45 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
-                .Include(d => d.Partner)
+            var partnerActionMap = await _context.PartnerActionMap
+                .Include(p => p.Action)
+                .Include(p => p.Partner)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            if (partnerActionMap == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(partnerActionMap);
         }
 
-        // GET: Admin/Users/Create
+        // GET: Admin/PartnerActionMap/Create
         public IActionResult Create()
         {
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name");
+            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name");
             return View();
         }
 
-        // POST: Admin/Users/Create
+        // POST: Admin/PartnerActionMap/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Create([Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMap partnerActionMap)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(discountsUser);
+                _context.Add(partnerActionMap);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
+            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", partnerActionMap.PartnerId);
+            return View(partnerActionMap);
         }
 
-        // GET: Admin/Users/Edit/5
+        // GET: Admin/PartnerActionMap/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,23 +81,24 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            if (discountsUser == null)
+            var partnerActionMap = await _context.PartnerActionMap.FindAsync(id);
+            if (partnerActionMap == null)
             {
                 return NotFound();
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
+            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Id", partnerActionMap.PartnerId);
+            return View(partnerActionMap);
         }
 
-        // POST: Admin/Users/Edit/5
+        // POST: Admin/PartnerActionMap/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMap partnerActionMap)
         {
-            if (id != discountsUser.Id)
+            if (id != partnerActionMap.Id)
             {
                 return NotFound();
             }
@@ -103,12 +107,12 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(discountsUser);
+                    _context.Update(partnerActionMap);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DiscountsUserExists(discountsUser.Id))
+                    if (!PartnerActionMapExists(partnerActionMap.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +123,12 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
+            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Id", partnerActionMap.PartnerId);
+            return View(partnerActionMap);
         }
 
-        // GET: Admin/Users/Delete/5
+        // GET: Admin/PartnerActionMap/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,31 +136,32 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
-                .Include(d => d.Partner)
+            var partnerActionMap = await _context.PartnerActionMap
+                .Include(p => p.Action)
+                .Include(p => p.Partner)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            if (partnerActionMap == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(partnerActionMap);
         }
 
-        // POST: Admin/Users/Delete/5
+        // POST: Admin/PartnerActionMap/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            _context.DiscountUser.Remove(discountsUser);
+            var partnerActionMap = await _context.PartnerActionMap.FindAsync(id);
+            _context.PartnerActionMap.Remove(partnerActionMap);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DiscountsUserExists(int id)
+        private bool PartnerActionMapExists(int id)
         {
-            return _context.DiscountUser.Any(e => e.Id == id);
+            return _context.PartnerActionMap.Any(e => e.Id == id);
         }
     }
 }

@@ -33,6 +33,17 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Admin <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="Admin" asp-controller="Users" asp-action="Index">Users</a></li>
+                            <li><a asp-area="Admin" asp-controller="Partners" asp-action="Index">Partners</a></li>
+                            <li><a asp-area="Admin" asp-controller="PartnerTypes" asp-action="Index">Partner Types</a></li>
+                            <li><a asp-area="Admin" asp-controller="Actions" asp-action="Index">Actions</a></li>
+                            <li><a asp-area="Admin" asp-controller="PartnerActionMap" asp-action="Index">Partner Action Map</a></li>
+                            <li><a asp-area="Admin" asp-controller="UsedActions" asp-action="Index">Used Actions</a></li>
+                        </ul>
+                    </li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
@@ -69,6 +80,12 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

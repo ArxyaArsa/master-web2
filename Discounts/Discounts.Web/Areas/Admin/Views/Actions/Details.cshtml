@@ -1,0 +1,78 @@
+﻿@model Discounts.DataLayer.Models.DiscountAction
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DiscountAction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CashValue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CashValue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PercentValue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PercentValue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCanceled)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCanceled)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CancelDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CancelDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CancelReason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CancelReason)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
