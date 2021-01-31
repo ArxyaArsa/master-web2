@@ -7,23 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
+using Discounts.Services.Helpers;
+using Discounts.Web.Areas.Admin.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     public class PartnersController : AdminBaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PartnerFactory _partnerFactory;
+        private readonly PartnerTypeFactory _partnerTypeFactory;
 
-        public PartnersController(ApplicationDbContext context)
+        public PartnersController(PartnerFactory partnerFactory, PartnerTypeFactory partnerTypeFactory)
         {
-            _context = context;
+            _partnerFactory = partnerFactory;
+            _partnerTypeFactory = partnerTypeFactory;
         }
 
         // GET: Admin/Partners
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Partner.Include(p => p.PartnerType);
-            return View(await applicationDbContext.ToListAsync());
+            var partners = _partnerFactory.GetAllPartners();
+            return View(partners);
         }
 
         // GET: Admin/Partners/Details/5
@@ -34,9 +40,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partner = await _context.Partner
-                .Include(p => p.PartnerType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var partner = _partnerFactory.GetPartner(id);
             if (partner == null)
             {
                 return NotFound();
@@ -48,7 +52,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/Partners/Create
         public IActionResult Create()
         {
-            ViewData["PartnerTypeId"] = new SelectList(_context.PartnerType, "Id", "Name");
+            ViewData["PartnerTypeId"] = new SelectList(_partnerTypeFactory.GetAllPartnerTypes(), "Id", "Name");
             return View();
         }
 
@@ -57,15 +61,14 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PartnerTypeId,Name,StartDate,EndDate")] Partner partner)
+        public async Task<IActionResult> Create([Bind("Id,PartnerTypeId,Name,StartDate,EndDate")] PartnerModel partner)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(partner);
-                await _context.SaveChangesAsync();
+                _partnerFactory.CreatePartner(partner);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerTypeId"] = new SelectList(_context.PartnerType, "Id", "Name", partner.PartnerTypeId);
+            ViewData["PartnerTypeId"] = new SelectList(_partnerTypeFactory.GetAllPartnerTypes(), "Id", "Name", partner.PartnerTypeId);
             return View(partner);
         }
 
@@ -77,12 +80,12 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partner = await _context.Partner.FindAsync(id);
+            var partner = _partnerFactory.GetPartner(id);
             if (partner == null)
             {
                 return NotFound();
             }
-            ViewData["PartnerTypeId"] = new SelectList(_context.PartnerType, "Id", "Name", partner.PartnerTypeId);
+            ViewData["PartnerTypeId"] = new SelectList(_partnerTypeFactory.GetAllPartnerTypes(), "Id", "Name", partner.PartnerTypeId);
             return View(partner);
         }
 
@@ -91,7 +94,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PartnerTypeId,Name,StartDate,EndDate")] Partner partner)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PartnerTypeId,Name,StartDate,EndDate")] PartnerModel partner)
         {
             if (id != partner.Id)
             {
@@ -100,25 +103,10 @@ namespace Discounts.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(partner);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PartnerExists(partner.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _partnerFactory.UpdatePartner(partner);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerTypeId"] = new SelectList(_context.PartnerType, "Id", "Name", partner.PartnerTypeId);
+            ViewData["PartnerTypeId"] = new SelectList(_partnerTypeFactory.GetAllPartnerTypes(), "Id", "Name", partner.PartnerTypeId);
             return View(partner);
         }
 
@@ -130,31 +118,64 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partner = await _context.Partner
-                .Include(p => p.PartnerType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (partner == null)
+            var model = _partnerFactory.GetPartner(id);
+
+            if (model == null)
             {
                 return NotFound();
             }
 
-            return View(partner);
+            return View(model);
         }
 
         // POST: Admin/Partners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var partner = await _context.Partner.FindAsync(id);
-            _context.Partner.Remove(partner);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            if (id == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                _partnerFactory.DeletePartner(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException e)
+            {
+                // log error here
 
-        private bool PartnerExists(int id)
-        {
-            return _context.Partner.Any(e => e.Id == id);
+                var allowedErrors = new List<string>()
+                {
+                    ServicesConstants.DeletePartner_NotAllowedReasonMessage_PartnerHasActions,
+                    ServicesConstants.DeletePartner_NotAllowedReasonMessage_PartnerHasUsedActions,
+                    ServicesConstants.DeletePartner_NotAllowedReasonMessage_PartnerHasUsers
+                };
+
+                if (allowedErrors.Contains(e.Message ?? ""))
+                {
+                    return View("CustomError", new CustomErrorViewModel()
+                    {
+                        HeaderMessage = "Not allowed",
+                        Message = e.Message,
+                        ReturnUrls = new Dictionary<string, string>()
+                         {
+                             { "Back to Delete Partner page", Url.Action("Delete", "Partners", new { area = "Admin", id = id }) },
+                             { "Go to this Partner details", Url.Action("Details", "Partners", new { area = "Admin", id = id }) },
+                             { "Go to Partners", Url.Action("Index", "Partners", new { area = "Admin" }) },
+                         }
+                    });
+                }
+                else
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // log error here
+
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

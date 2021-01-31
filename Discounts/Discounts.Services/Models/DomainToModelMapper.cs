@@ -15,7 +15,7 @@ namespace Discounts.Services.Models
             CreateMap<PartnerTypeModel, PartnerType>();
 
             CreateMap<Partner, PartnerModel>()
-                .ForMember(d => d.PartnerType, o => o.MapFrom(s => s.PartnerType));
+                .ForMember(d => d.PartnerTypeName, o => o.MapFrom(s => s.PartnerType.Name));
             CreateMap<PartnerModel, Partner>();
 
             CreateMap<DiscountAction, ActionModel>();

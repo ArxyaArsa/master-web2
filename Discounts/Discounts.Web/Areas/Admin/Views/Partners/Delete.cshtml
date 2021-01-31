@@ -1,7 +1,7 @@
-﻿@model Discounts.DataLayer.Models.Partner
+﻿@model Discounts.Services.Models.PartnerModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Partner";
 }
 
 <h2>Delete</h2>
@@ -30,10 +30,10 @@
             @Html.DisplayFor(model => model.EndDate)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PartnerType)
+            @Html.DisplayNameFor(model => model.PartnerTypeName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PartnerType.Id)
+            @Html.DisplayFor(model => model.PartnerTypeName)
         </dd>
     </dl>
     

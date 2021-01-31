@@ -27,13 +27,6 @@ namespace Discounts.Web.Areas.Admin.Controllers
             _userFactory = userFactory;
             _partnerFactory = partnerFactory;
         }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            ViewData["Controller"] = "Users";
-
-            base.OnActionExecuting(context);
-        }
         #endregion
 
         // GET: Admin/Users
@@ -169,7 +162,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 // log error here
 
-                if ((e.Message ?? "").Equals(ServicesConstants.DeleteNotAllowedReasonMessage_UserHasUsedActions))
+                if ((e.Message ?? "").Equals(ServicesConstants.DeleteUser_NotAllowedReasonMessage_UserHasUsedActions))
                 {
                     return View("CustomError", new CustomErrorViewModel()
                     {

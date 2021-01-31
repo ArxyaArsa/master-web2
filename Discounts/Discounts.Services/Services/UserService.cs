@@ -87,7 +87,7 @@ namespace Discounts.Services.Services
                 return;
 
             if (_context.UsedAction.Where(x => x.UserId == id).Any())
-                throw new InvalidOperationException(ServicesConstants.DeleteNotAllowedReasonMessage_UserHasUsedActions);
+                throw new InvalidOperationException(ServicesConstants.DeleteUser_NotAllowedReasonMessage_UserHasUsedActions);
 
             _context.Users.Remove(dUser);
             _context.SaveChanges();

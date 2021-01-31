@@ -12,6 +12,6 @@ namespace Discounts.Services.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public PartnerTypeModel PartnerType { get; set; }
+        public string PartnerTypeName { get; set; }
     }
 }

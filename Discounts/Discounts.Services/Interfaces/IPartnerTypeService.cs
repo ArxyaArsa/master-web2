@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Discounts.Services.Interfaces
 {
-    public interface IPartnerService
+    public interface IPartnerTypeService
     {
-        IEnumerable<Partner> GetPartners();
-        Partner Create(Partner partner);
-        Partner Update(Partner partner);
-        void Delete(int? id);
+        IEnumerable<PartnerType> GetPartnerTypes();
     }
 }
