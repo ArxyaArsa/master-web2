@@ -30,6 +30,11 @@ namespace Discounts.Web.Factories
             return _mapper.Map<DiscountsUser, UserModel>(_userService.GetUsers().FirstOrDefault(x => x.Id == id));
         }
 
+        public UserModel GetUser(string username)
+        {
+            return _mapper.Map<DiscountsUser, UserModel>(_userService.GetUsers().FirstOrDefault(x => x.UserName == username));
+        }
+
         public void UpdateUser(UserModel user)
         {
             var dUser = _userService.GetUsers().FirstOrDefault(x => x.Id == user.Id);

@@ -10,8 +10,7 @@ using Discounts.DataLayer.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class PartnerActionMapController : Controller
+    public class PartnerActionMapController : AdminBaseController
     {
         private readonly ApplicationDbContext _context;
 

@@ -11,12 +11,14 @@ using Discounts.Web.Factories;
 using Discounts.Services.Models;
 using Discounts.Services.Helpers;
 using Discounts.Web.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class UsersController : Controller
+    public class UsersController : AdminBaseController
     {
+        #region non-actions
         private readonly UserFactory _userFactory;
         private readonly PartnerFactory _partnerFactory;
 
@@ -25,6 +27,14 @@ namespace Discounts.Web.Areas.Admin.Controllers
             _userFactory = userFactory;
             _partnerFactory = partnerFactory;
         }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            ViewData["Controller"] = "Users";
+
+            base.OnActionExecuting(context);
+        }
+        #endregion
 
         // GET: Admin/Users
         public async Task<IActionResult> Index()

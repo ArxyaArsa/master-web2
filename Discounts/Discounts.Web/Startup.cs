@@ -17,6 +17,8 @@ using Discounts.Services;
 using AutoMapper;
 using Discounts.Web.Factories;
 using Discounts.Services.Models;
+using Microsoft.AspNetCore.Authentication;
+using Discounts.Web.Helpers;
 
 namespace Discounts.Web
 {
@@ -46,6 +48,7 @@ namespace Discounts.Web
                     Configuration.GetConnectionString("DiscountsConnection")));
             services.AddDefaultIdentity<DiscountsUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
 
             services.AddServiceDependencies();
             services.AddFactoryDependencies();

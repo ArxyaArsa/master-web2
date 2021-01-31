@@ -35,3 +35,12 @@ body {
         display: none;
     }
 }
+
+.underline {
+    text-decoration: underline;
+}
+
+.subMenu {
+    background-color: rgb(50,50,50);
+    border-radius: 10px;
+}
