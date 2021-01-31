@@ -9,5 +9,9 @@ namespace Discounts.Services.Interfaces
     public interface IPartnerTypeService
     {
         IEnumerable<PartnerType> GetPartnerTypes();
+        PartnerType GetPartnerType(int? id);
+        PartnerType Create(PartnerType model);
+        PartnerType Update(PartnerType model);
+        void Delete(int? id);
     }
 }

@@ -36,8 +36,9 @@ body {
     }
 }
 
-.underline {
+.activeSubMenu {
     text-decoration: underline;
+    font-weight: bold;
 }
 
 .subMenu {

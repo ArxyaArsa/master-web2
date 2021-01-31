@@ -7,22 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
+using Discounts.Web.Areas.Admin.Models;
+using Discounts.Services.Helpers;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     public class PartnerTypesController : AdminBaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PartnerTypeFactory _partnerTypeFactory;
 
-        public PartnerTypesController(ApplicationDbContext context)
+        public PartnerTypesController(PartnerTypeFactory partnerTypeFactory)
         {
-            _context = context;
+            _partnerTypeFactory = partnerTypeFactory;
         }
 
         // GET: Admin/PartnerTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PartnerType.ToListAsync());
+            return View(_partnerTypeFactory.GetAllPartnerTypes());
         }
 
         // GET: Admin/PartnerTypes/Details/5
@@ -33,8 +37,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerType = await _context.PartnerType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var partnerType = _partnerTypeFactory.GetPartnerType(id);
             if (partnerType == null)
             {
                 return NotFound();
@@ -54,12 +57,11 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] PartnerType partnerType)
+        public async Task<IActionResult> Create([Bind("Id,Name")] PartnerTypeModel partnerType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(partnerType);
-                await _context.SaveChangesAsync();
+                partnerType = _partnerTypeFactory.CraetePartnerType(partnerType);
                 return RedirectToAction(nameof(Index));
             }
             return View(partnerType);
@@ -73,7 +75,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerType = await _context.PartnerType.FindAsync(id);
+            var partnerType = _partnerTypeFactory.GetPartnerType(id);
             if (partnerType == null)
             {
                 return NotFound();
@@ -86,7 +88,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] PartnerType partnerType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] PartnerTypeModel partnerType)
         {
             if (id != partnerType.Id)
             {
@@ -95,22 +97,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(partnerType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PartnerTypeExists(partnerType.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                partnerType = _partnerTypeFactory.UpdatePartnerType(partnerType);
                 return RedirectToAction(nameof(Index));
             }
             return View(partnerType);
@@ -124,8 +111,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerType = await _context.PartnerType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var partnerType = _partnerTypeFactory.GetPartnerType(id);
             if (partnerType == null)
             {
                 return NotFound();
@@ -139,15 +125,43 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var partnerType = await _context.PartnerType.FindAsync(id);
-            _context.PartnerType.Remove(partnerType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            try
+            {
+                _partnerTypeFactory.DeletePartnerType(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException e)
+            {
+                // log error here
 
-        private bool PartnerTypeExists(int id)
-        {
-            return _context.PartnerType.Any(e => e.Id == id);
+                var allowedErrors = new List<string>()
+                {
+                    ServicesConstants.DeletePartnerType_NotAllowedReasonMessage_PartnerTypeHasPartners,
+                };
+
+                if (allowedErrors.Contains(e.Message ?? ""))
+                {
+                    return View("CustomError", new CustomErrorViewModel()
+                    {
+                        HeaderMessage = "Not allowed",
+                        Message = e.Message,
+                        ReturnUrls = new Dictionary<string, string>()
+                         {
+                             { "Back to Delete Partner Type page", Url.Action("Delete", "PartnerTypes", new { area = "Admin", id = id }) },
+                             { "Go to this Partner Type details", Url.Action("Details", "PartnerTypes", new { area = "Admin", id = id }) },
+                             { "Go to Partner Types", Url.Action("Index", "PartnerTypes", new { area = "Admin" }) },
+                         }
+                    });
+                }
+                else
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // log error here
+
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _partnerFactory.CreatePartner(partner);
+                partner = _partnerFactory.CreatePartner(partner);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PartnerTypeId"] = new SelectList(_partnerTypeFactory.GetAllPartnerTypes(), "Id", "Name", partner.PartnerTypeId);
@@ -133,10 +133,6 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             try
             {
                 _partnerFactory.DeletePartner(id);

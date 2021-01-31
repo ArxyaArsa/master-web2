@@ -29,5 +29,27 @@ namespace Discounts.Web.Factories
         {
             return GetAllPartnerTypes().FirstOrDefault(x => x.Id == id);
         }
+
+        public PartnerTypeModel CraetePartnerType(PartnerTypeModel model)
+        {
+            var partner = _mapper.Map<PartnerTypeModel, PartnerType>(model);
+
+            return _mapper.Map<PartnerType, PartnerTypeModel>(_partnerTypeService.Create(partner));
+        }
+
+        public PartnerTypeModel UpdatePartnerType(PartnerTypeModel partnerType)
+        {
+            var dPartnerType = _partnerTypeService.GetPartnerTypes().FirstOrDefault(x => x.Id == partnerType.Id);
+
+            dPartnerType.Name = partnerType.Name;
+            var ret = _partnerTypeService.Update(dPartnerType);
+
+            return _mapper.Map<PartnerType, PartnerTypeModel>(ret);
+        }
+
+        public void DeletePartnerType(int? id)
+        {
+            _partnerTypeService.Delete(id);
+        }
     }
 }
