@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Discounts.DataLayer.Models.UsedAction>
+﻿@model IEnumerable<Discounts.Services.Models.UsedActionModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Used Action Records";
 }
 
-<h2>Index</h2>
+<h2>Used Action Record List</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -16,13 +16,13 @@
                 @Html.DisplayNameFor(model => model.ActionValue)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Partner)
+                @Html.DisplayNameFor(model => model.PartnerName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Action)
+                @Html.DisplayNameFor(model => model.ActionName)
             </th>
             <th></th>
         </tr>
@@ -34,13 +34,13 @@
                 @Html.DisplayFor(modelItem => item.ActionValue)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Partner.Name)
+                @Html.DisplayFor(modelItem => item.PartnerName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Action.Name)
+                @Html.DisplayFor(modelItem => item.ActionName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -28,9 +28,9 @@ namespace Discounts.Services.Models
             CreateMap<PartnerActionMapModel, PartnerActionMap>();
 
             CreateMap<UsedAction, UsedActionModel>()
-                .ForMember(d => d.Action, o => o.MapFrom(s => s.Action))
-                .ForMember(d => d.User, o => o.MapFrom(s => s.User))
-                .ForMember(d => d.Partner, o => o.MapFrom(s => s.Partner));
+                .ForMember(d => d.ActionName, o => o.MapFrom(s => s.Action.Name))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.User.UserName))
+                .ForMember(d => d.PartnerName, o => o.MapFrom(s => s.Partner.Name));
             CreateMap<UsedActionModel, UsedAction>();
 
             CreateMap<DiscountsUser, UserModel>()

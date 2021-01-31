@@ -7,23 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
+using Discounts.Services.Helpers;
+using Discounts.Web.Areas.Admin.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     public class UsedActionsController : AdminBaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UsedActionFactory _factory;
+        private readonly PartnerFactory _partnerFactory;
+        private readonly ActionFactory _actionFactory;
+        private readonly UserFactory _userFactory;
 
-        public UsedActionsController(ApplicationDbContext context)
+        public UsedActionsController(UsedActionFactory factory, UserFactory userFactory, ActionFactory actionFactory, PartnerFactory partnerFactory)
         {
-            _context = context;
+            _factory = factory;
+            _partnerFactory = partnerFactory;
+            _actionFactory = actionFactory;
+            _userFactory = userFactory;
         }
 
         // GET: Admin/UsedActions
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.UsedAction.Include(u => u.Action).Include(u => u.Partner).Include(u => u.User);
-            return View(await applicationDbContext.ToListAsync());
+            return View(_factory.GetAll());
         }
 
         // GET: Admin/UsedActions/Details/5
@@ -34,11 +43,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var usedAction = await _context.UsedAction
-                .Include(u => u.Action)
-                .Include(u => u.Partner)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var usedAction = _factory.Get(id);
             if (usedAction == null)
             {
                 return NotFound();
@@ -50,9 +55,9 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/UsedActions/Create
         public IActionResult Create()
         {
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name");
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
+            ViewData["UserId"] = new SelectList(_userFactory.GetAllUsers(), "Id", "UserName");
             return View();
         }
 
@@ -61,18 +66,57 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,ActionId,PartnerId,ActionValue")] UsedAction usedAction)
+        public async Task<IActionResult> Create([Bind("Id,UserId,ActionId,PartnerId,ActionValue")] UsedActionModel usedAction)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usedAction);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    usedAction = _factory.Create(usedAction);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (InvalidOperationException e)
+                {
+                    // log error here
+
+                    var allowedErrors = new List<string>()
+                    {
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_UserDoesNotExist,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_PartnerDoesNotExist,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_MapAlreadyExists,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_ActionDoesNotExist,
+                    };
+
+                    if (allowedErrors.Contains(e.Message ?? ""))
+                    {
+                        return View("CustomError", new CustomErrorViewModel()
+                        {
+                            HeaderMessage = "Not allowed",
+                            Message = e.Message,
+                            ReturnUrls = new Dictionary<string, string>()
+                         {
+                             { "Back to Create Used Action Record page", Url.Action("Create", "UsedActions", new { area = "Admin" }) },
+                             { "Go to Used Action Record List", Url.Action("Index", "UsedActions", new { area = "Admin" }) },
+                         }
+                        });
+                    }
+                    else
+                        return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    // log error here
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
-            return View(usedAction);
+            else
+            {
+                ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", usedAction.ActionId);
+                ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", usedAction.PartnerId);
+                ViewData["UserId"] = new SelectList(_userFactory.GetAllUsers(), "Id", "UserName", usedAction.UserId);
+                return View(usedAction);
+            }
         }
 
         // GET: Admin/UsedActions/Edit/5
@@ -83,14 +127,14 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var usedAction = await _context.UsedAction.FindAsync(id);
+            var usedAction = _factory.Get(id);
             if (usedAction == null)
             {
                 return NotFound();
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", usedAction.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", usedAction.PartnerId);
+            ViewData["UserId"] = new SelectList(_userFactory.GetAllUsers(), "Id", "UserName", usedAction.UserId);
             return View(usedAction);
         }
 
@@ -99,7 +143,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,ActionId,PartnerId,ActionValue")] UsedAction usedAction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,ActionId,PartnerId,ActionValue")] UsedActionModel usedAction)
         {
             if (id != usedAction.Id)
             {
@@ -110,12 +154,11 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(usedAction);
-                    await _context.SaveChangesAsync();
+                    _factory.Update(usedAction);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsedActionExists(usedAction.Id))
+                    if (_factory.Get(usedAction.Id) != null)
                     {
                         return NotFound();
                     }
@@ -124,12 +167,49 @@ namespace Discounts.Web.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                catch (InvalidOperationException e)
+                {
+                    // log error here
+
+                    var allowedErrors = new List<string>()
+                    {
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_UserDoesNotExist,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_PartnerDoesNotExist,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_MapAlreadyExists,
+                        ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_ActionDoesNotExist,
+                    };
+
+                    if (allowedErrors.Contains(e.Message ?? ""))
+                    {
+                        return View("CustomError", new CustomErrorViewModel()
+                        {
+                            HeaderMessage = "Not allowed",
+                            Message = e.Message,
+                            ReturnUrls = new Dictionary<string, string>()
+                            {
+                                { "Back to Edit Used Action Record page", Url.Action("Edit", "UsedActions", new { area = "Admin", id = id }) },
+                                { "Go to Used Action Record List", Url.Action("Index", "UsedActions", new { area = "Admin" }) },
+                            }
+                        });
+                    }
+                    else
+                        return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    // log error here
+
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
-            return View(usedAction);
+            else
+            {
+                ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", usedAction.ActionId);
+                ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", usedAction.PartnerId);
+                ViewData["UserId"] = new SelectList(_userFactory.GetAllUsers(), "Id", "UserName", usedAction.UserId);
+                return View(usedAction);
+            }
         }
 
         // GET: Admin/UsedActions/Delete/5
@@ -140,11 +220,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var usedAction = await _context.UsedAction
-                .Include(u => u.Action)
-                .Include(u => u.Partner)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var usedAction = _factory.Get(id);
             if (usedAction == null)
             {
                 return NotFound();
@@ -158,15 +234,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usedAction = await _context.UsedAction.FindAsync(id);
-            _context.UsedAction.Remove(usedAction);
-            await _context.SaveChangesAsync();
+            _factory.DeleteMap(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UsedActionExists(int id)
-        {
-            return _context.UsedAction.Any(e => e.Id == id);
         }
     }
 }

@@ -17,5 +17,13 @@ namespace Discounts.Services.Helpers
         public const string UpdatePartnerActionMap_NotAllowedReasonMessage_MapAlreadyExists = "Invalid operation. A mapping with this Partner and Action already exists.";
         public const string UpdatePartnerActionMap_NotAllowedReasonMessage_PartnerDoesNotExist = "Invalid operation. No Partner found with supplied Id.";
         public const string UpdatePartnerActionMap_NotAllowedReasonMessage_ActionDoesNotExist = "Invalid operation. No Action found with supplied Id.";
+        public const string CreateUsedAction_NotAllowedReasonMessage_MapAlreadyExists = "Invalid operation. A mapping with this User, Partner and Action already exists.";
+        public const string CreateUsedAction_NotAllowedReasonMessage_PartnerDoesNotExist = "Invalid operation. No Partner found with supplied Id.";
+        public const string CreateUsedAction_NotAllowedReasonMessage_ActionDoesNotExist = "Invalid operation. No Action found with supplied Id.";
+        public const string CreateUsedAction_NotAllowedReasonMessage_UserDoesNotExist = "Invalid operation. No User found with supplied Id.";
+        public const string UpdateUsedAction_NotAllowedReasonMessage_MapAlreadyExists = "Invalid operation. A mapping with this User, Partner and Action already exists.";
+        public const string UpdateUsedAction_NotAllowedReasonMessage_PartnerDoesNotExist = "Invalid operation. No Partner found with supplied Id.";
+        public const string UpdateUsedAction_NotAllowedReasonMessage_ActionDoesNotExist = "Invalid operation. No Action found with supplied Id.";
+        public const string UpdateUsedAction_NotAllowedReasonMessage_UserDoesNotExist = "Invalid operation. No User found with supplied Id.";
     }
 }

@@ -20,7 +20,7 @@ namespace Discounts.Web.Factories
             _mapper = mapper;
         }
 
-        public IEnumerable<ActionModel> GetAllActions()
+        public IEnumerable<ActionModel> GetAll()
         {
             return _actionService.GetActions().Select(x => _mapper.Map<DiscountAction, ActionModel>(x));
         }

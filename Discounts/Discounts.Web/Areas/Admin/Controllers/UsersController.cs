@@ -56,7 +56,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public IActionResult Create()
         {
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
             ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name");
             return View();
         }
@@ -73,7 +73,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 _userFactory.CreateUser(userModel);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
             return View(userModel);
         }
 
@@ -90,7 +90,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
             ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
             return View(userModel);
         }
@@ -126,7 +126,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
             ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
             return View(userModel);
         }

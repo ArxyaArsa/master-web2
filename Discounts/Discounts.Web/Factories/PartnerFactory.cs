@@ -20,7 +20,7 @@ namespace Discounts.Web.Factories
             _mapper = mapper;
         }
 
-        public IEnumerable<PartnerModel> GetAllPartners()
+        public IEnumerable<PartnerModel> GetAll()
         {
             return _partnerService.GetPartners().Select(x => _mapper.Map<Partner, PartnerModel>(x));
         }

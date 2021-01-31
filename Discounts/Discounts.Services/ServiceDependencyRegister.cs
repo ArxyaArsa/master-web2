@@ -17,6 +17,7 @@ namespace Discounts.Services
             serviceCollection.AddScoped<IPartnerTypeService, PartnerTypeService>();
             serviceCollection.AddScoped<IActionService, ActionService>();
             serviceCollection.AddScoped<IPartnerActionMapService, PartnerActionMapService>();
+            serviceCollection.AddScoped<IUsedActionService, UsedActionService>();
         }
     }
 }

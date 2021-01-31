@@ -53,8 +53,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/PartnerActionMap/Create
         public IActionResult Create()
         {
-            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name");
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -106,8 +106,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", map.PartnerId);
             return View(map);
         }
 
@@ -124,8 +124,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", map.PartnerId);
             return View(map);
         }
 
@@ -182,8 +182,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
-            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAll(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAll(), "Id", "Name", map.PartnerId);
             return View(map);
         }
 

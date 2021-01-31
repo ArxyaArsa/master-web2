@@ -28,7 +28,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/Partners
         public async Task<IActionResult> Index()
         {
-            var partners = _partnerFactory.GetAllPartners();
+            var partners = _partnerFactory.GetAll();
             return View(partners);
         }
 

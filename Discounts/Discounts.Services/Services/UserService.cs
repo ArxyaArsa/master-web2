@@ -97,5 +97,10 @@ namespace Discounts.Services.Services
         {
             return _context.Roles.AsEnumerable();
         }
+
+        public bool Exists(int? id)
+        {
+            return _context.Users.Any(x => x.Id == id);
+        }
     }
 }

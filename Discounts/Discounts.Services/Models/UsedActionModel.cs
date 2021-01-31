@@ -12,8 +12,8 @@ namespace Discounts.Services.Models
         public int PartnerId { get; set; }
         public decimal ActionValue { get; set; }
         
-        public UserModel User { get; set; }
-        public PartnerModel Partner { get; set; }
-        public ActionModel Action { get; set; }
+        public string UserName { get; set; }
+        public string PartnerName { get; set; }
+        public string ActionName { get; set; }
     }
 }

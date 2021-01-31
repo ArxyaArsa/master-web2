@@ -24,7 +24,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/Actions
         public async Task<IActionResult> Index()
         {
-            return View(_actionFactory.GetAllActions());
+            return View(_actionFactory.GetAll());
         }
 
         // GET: Admin/Actions/Details/5
