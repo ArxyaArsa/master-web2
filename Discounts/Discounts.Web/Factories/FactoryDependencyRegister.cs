@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Discounts.Web.Factories
 {
-    public static class FactoryRegister
+    public static class FactoryDependencyRegister
     {
-        public static void AddFactories(this IServiceCollection serviceCollection)
+        public static void AddFactoryDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<UserFactory>();
+            serviceCollection.AddScoped<PartnerFactory>();
         }
     }
 }

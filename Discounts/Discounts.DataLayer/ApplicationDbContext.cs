@@ -30,8 +30,8 @@ namespace Discounts.DataLayer
 
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0")
-                .HasAnnotation(Constants.Relational_MaxIdentifierLength, 128)
-                .HasAnnotation(Constants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation(DataLayerConstants.Relational_MaxIdentifierLength, 128)
+                .HasAnnotation(DataLayerConstants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.ApplyConfiguration(new IdentityUserConfig());
             modelBuilder.ApplyConfiguration(new IdentityRoleConfig());

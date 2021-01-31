@@ -13,7 +13,7 @@ namespace Discounts.DataLayer.Configs
         {
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd()
-                .HasAnnotation(Constants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation(DataLayerConstants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
             builder.Property(x => x.PartnerId).IsRequired();
             builder.Property(x => x.ActionId).IsRequired();
             builder.Property(x => x.CreatedDate);

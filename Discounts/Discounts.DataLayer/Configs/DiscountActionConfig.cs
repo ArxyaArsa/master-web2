@@ -13,7 +13,7 @@ namespace Discounts.DataLayer.Configs
         {
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd()
-                .HasAnnotation(Constants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation(DataLayerConstants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
             builder.Property(x => x.Name).HasMaxLength(250).IsRequired();
             builder.Property(x => x.Description).HasMaxLength(1000);
             builder.Property(x => x.CashValue).HasColumnType("DECIMAL(19,2)");

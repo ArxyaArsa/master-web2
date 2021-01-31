@@ -1,0 +1,21 @@
+﻿@model Discounts.Web.Areas.Admin.Models.CustomErrorViewModel
+@{
+    ViewData["Title"] = Model.HeaderMessage ?? "Error";
+}
+
+<h2 class="text-danger">@(Model.HeaderMessage ?? "Error")</h2>
+
+<p>
+    @(Model.Message ?? "")
+</p>
+<p>
+    @if (Model.ReturnUrls != null && Model.ReturnUrls.Any())
+    {
+        foreach(var e in Model.ReturnUrls)
+        {
+            <text>
+            <a href="@e.Value">@e.Key</a><br />
+            </text>
+        }
+    }
+</p>

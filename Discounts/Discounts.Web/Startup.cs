@@ -48,7 +48,7 @@ namespace Discounts.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddServiceDependencies();
-            services.AddFactories();
+            services.AddFactoryDependencies();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

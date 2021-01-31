@@ -8,11 +8,12 @@ using AutoMapper;
 
 namespace Discounts.Services
 {
-    public static class ServiceDependency
+    public static class ServiceDependencyRegister
     {
         public static void AddServiceDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IUserService, UserService>();
+            serviceCollection.AddScoped<IPartnerService, PartnerService>();
         }
     }
 }

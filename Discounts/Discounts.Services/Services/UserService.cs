@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Services.Helpers;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,19 @@ namespace Discounts.Services.Services
 
                 return newUser;
             }
+        }
+
+        public void DeleteUser(int id)
+        {
+            var dUser = _context.Users.Find(id);
+            if (dUser == null)
+                return;
+
+            if (_context.UsedAction.Where(x => x.UserId == id).Any())
+                throw new InvalidOperationException(ServicesConstants.DeleteNotAllowedReasonMessage_UserHasUsedActions);
+
+            _context.Users.Remove(dUser);
+            _context.SaveChanges();
         }
 
         public IEnumerable<DiscountsRole> GetRoles()

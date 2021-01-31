@@ -13,7 +13,7 @@ namespace Discounts.DataLayer.Configs
         {
             builder.Property(x => x.Id)
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation(Constants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation(DataLayerConstants.SqlServer_ValueGenerationStrategy, SqlServerValueGenerationStrategy.IdentityColumn);
             builder.Property(x => x.ClaimType);
             builder.Property(x => x.ClaimValue);
             builder.Property(x => x.RoleId)

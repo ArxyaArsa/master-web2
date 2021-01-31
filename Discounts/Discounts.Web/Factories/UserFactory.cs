@@ -61,6 +61,11 @@ namespace Discounts.Web.Factories
             _userService.CreateUser(dUser, user.Roles);
         }
 
+        public void DeleteUser(int id)
+        {
+            _userService.DeleteUser(id);
+        }
+
         public IEnumerable<RoleModel> GetAllRoles()
         {
             return _userService.GetRoles().Select(x => _mapper.Map<DiscountsRole, RoleModel>(x)).AsEnumerable();

@@ -12,5 +12,6 @@ namespace Discounts.Services.Interfaces
         void UpdateUser(DiscountsUser user, IList<string> roles);
         DiscountsUser CreateUser(DiscountsUser user, IList<string> roles);
         IEnumerable<DiscountsRole> GetRoles();
+        void DeleteUser(int id);
     }
 }

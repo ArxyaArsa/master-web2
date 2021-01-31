@@ -9,19 +9,21 @@ using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
 using Discounts.Web.Factories;
 using Discounts.Services.Models;
+using Discounts.Services.Helpers;
+using Discounts.Web.Areas.Admin.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserFactory _userFactory;
+        private readonly PartnerFactory _partnerFactory;
 
-        public UsersController(ApplicationDbContext context, UserFactory userFactory)
+        public UsersController(UserFactory userFactory, PartnerFactory partnerFactory)
         {
-            _context = context;
             _userFactory = userFactory;
+            _partnerFactory = partnerFactory;
         }
 
         // GET: Admin/Users
@@ -51,8 +53,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public IActionResult Create()
         {
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name");
-            ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", new List<string>());
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
+            ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name");
             return View();
         }
 
@@ -68,7 +70,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 _userFactory.CreateUser(userModel);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
             return View(userModel);
         }
 
@@ -85,7 +87,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
             ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
             return View(userModel);
         }
@@ -121,7 +123,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
             ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
             return View(userModel);
         }
@@ -134,15 +136,13 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.Users
-                .Include(d => d.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            var userModel = _userFactory.GetUser(id);
+            if (userModel == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(userModel);
         }
 
         // POST: Admin/Users/Delete/5
@@ -150,10 +150,38 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var discountsUser = await _context.Users.FindAsync(id);
-            _context.Users.Remove(discountsUser);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _userFactory.DeleteUser(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException e)
+            {
+                // log error here
+
+                if ((e.Message ?? "").Equals(ServicesConstants.DeleteNotAllowedReasonMessage_UserHasUsedActions))
+                {
+                    return View("CustomError", new CustomErrorViewModel()
+                    {
+                         HeaderMessage = "Not allowed",
+                         Message = e.Message,
+                         ReturnUrls = new Dictionary<string, string>()
+                         {
+                             { "Back to Delete User page", Url.Action("Delete", "Users", new { area = "Admin", id = id }) },
+                             { "Go to this User details", Url.Action("Details", "Users", new { area = "Admin", id = id }) },
+                             { "Go to Users", Url.Action("Index", "Users", new { area = "Admin" }) },
+                         }
+                    });
+                }
+                else
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // log error here
+                
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }
