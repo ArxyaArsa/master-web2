@@ -1,12 +1,12 @@
-﻿@model Discounts.DataLayer.Models.PartnerActionMap
+﻿@model Discounts.Services.Models.PartnerActionMapModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Partner Action Mapping";
 }
 
-<h2>Create</h2>
+<h2>Create Partner Action Mapping</h2>
 
-<h4>PartnerActionMap</h4>
+<h4>Partner Action Mapping</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,12 +18,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ActionId" class="control-label"></label>
-                <select asp-for="ActionId" class ="form-control" asp-items="ViewBag.ActionId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                <select asp-for="ActionId" class="form-control" asp-items="ViewBag.ActionId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

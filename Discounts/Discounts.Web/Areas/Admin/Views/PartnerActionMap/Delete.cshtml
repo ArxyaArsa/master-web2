@@ -1,7 +1,7 @@
-﻿@model Discounts.DataLayer.Models.PartnerActionMap
+﻿@model Discounts.Services.Models.PartnerActionMapModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Partner Action Mapping";
 }
 
 <h2>Delete</h2>
@@ -18,16 +18,16 @@
             @Html.DisplayFor(model => model.CreatedDate)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Partner)
+            @Html.DisplayNameFor(model => model.PartnerName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Partner.Id)
+            @Html.DisplayFor(model => model.PartnerName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Action)
+            @Html.DisplayNameFor(model => model.ActionName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Action.Name)
+            @Html.DisplayFor(model => model.ActionName)
         </dd>
     </dl>
     

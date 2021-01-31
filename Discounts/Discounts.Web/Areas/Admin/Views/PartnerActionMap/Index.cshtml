@@ -1,25 +1,25 @@
-﻿@model IEnumerable<Discounts.DataLayer.Models.PartnerActionMap>
+﻿@model IEnumerable<Discounts.Services.Models.PartnerActionMapModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Partner Action Mapping List";
 }
 
-<h2>Index</h2>
+<h2>Partner Action Mapping List</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Mapping</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.PartnerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActionName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Partner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Action)
             </th>
             <th></th>
         </tr>
@@ -28,13 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.PartnerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Partner.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Action.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

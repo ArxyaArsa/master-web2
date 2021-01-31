@@ -60,5 +60,10 @@ namespace Discounts.Services.Services
             _context.DiscountAction.Remove(action);
             _context.SaveChanges();
         }
+
+        public bool Exists(int? id)
+        {
+            return _context.DiscountAction.Any(x => x.Id == id);
+        }
     }
 }

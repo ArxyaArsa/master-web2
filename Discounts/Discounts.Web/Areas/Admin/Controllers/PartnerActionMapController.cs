@@ -7,23 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
+using Discounts.Services.Helpers;
+using Discounts.Web.Areas.Admin.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     public class PartnerActionMapController : AdminBaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PartnerActionMapFactory _factory;
+        private readonly PartnerFactory _partnerFactory;
+        private readonly ActionFactory _actionFactory;
 
-        public PartnerActionMapController(ApplicationDbContext context)
+        public PartnerActionMapController(PartnerActionMapFactory factory, PartnerFactory partnerFactory, ActionFactory actionFactory)
         {
-            _context = context;
+            _factory = factory;
+            _partnerFactory = partnerFactory;
+            _actionFactory = actionFactory;
         }
 
         // GET: Admin/PartnerActionMap
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.PartnerActionMap.Include(p => p.Action).Include(p => p.Partner);
-            return View(await applicationDbContext.ToListAsync());
+            return View(_factory.GetAllMaps());
         }
 
         // GET: Admin/PartnerActionMap/Details/5
@@ -34,10 +41,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerActionMap = await _context.PartnerActionMap
-                .Include(p => p.Action)
-                .Include(p => p.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var partnerActionMap = _factory.GetMap(id);
             if (partnerActionMap == null)
             {
                 return NotFound();
@@ -49,8 +53,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // GET: Admin/PartnerActionMap/Create
         public IActionResult Create()
         {
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name");
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name");
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name");
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name");
             return View();
         }
 
@@ -59,17 +63,52 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMap partnerActionMap)
+        public async Task<IActionResult> Create([Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMapModel map)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(partnerActionMap);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _factory.CreateMap(map);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (InvalidOperationException e)
+                {
+                    // log error here
+
+                    var allowedErrors = new List<string>()
+                    {
+                        ServicesConstants.CreatePartnerActionMap_NotAllowedReasonMessage_ActionDoesNotExist,
+                        ServicesConstants.CreatePartnerActionMap_NotAllowedReasonMessage_PartnerDoesNotExist,
+                        ServicesConstants.CreatePartnerActionMap_NotAllowedReasonMessage_MapAlreadyExists,
+                    };
+
+                    if (allowedErrors.Contains(e.Message ?? ""))
+                    {
+                        return View("CustomError", new CustomErrorViewModel()
+                        {
+                            HeaderMessage = "Not allowed",
+                            Message = e.Message,
+                            ReturnUrls = new Dictionary<string, string>()
+                         {
+                             { "Back to Create Partner Action Map page", Url.Action("Create", "PartnerActionMap", new { area = "Admin" }) },
+                             { "Go to Partner Action Maps List", Url.Action("Index", "PartnerActionMap", new { area = "Admin" }) },
+                         }
+                        });
+                    }
+                    else
+                        return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    // log error here
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", partnerActionMap.PartnerId);
-            return View(partnerActionMap);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            return View(map);
         }
 
         // GET: Admin/PartnerActionMap/Edit/5
@@ -80,14 +119,14 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerActionMap = await _context.PartnerActionMap.FindAsync(id);
-            if (partnerActionMap == null)
+            var map = _factory.GetMap(id);
+            if (map == null)
             {
                 return NotFound();
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Id", partnerActionMap.PartnerId);
-            return View(partnerActionMap);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            return View(map);
         }
 
         // POST: Admin/PartnerActionMap/Edit/5
@@ -95,9 +134,9 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMap partnerActionMap)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PartnerId,ActionId,CreatedDate")] PartnerActionMapModel map)
         {
-            if (id != partnerActionMap.Id)
+            if (id != map.Id)
             {
                 return NotFound();
             }
@@ -106,25 +145,46 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(partnerActionMap);
-                    await _context.SaveChangesAsync();
+                    map = _factory.UpdateMap(map);
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (InvalidOperationException e)
                 {
-                    if (!PartnerActionMapExists(partnerActionMap.Id))
+                    // log error here
+
+                    var allowedErrors = new List<string>()
                     {
-                        return NotFound();
+                        ServicesConstants.UpdatePartnerActionMap_NotAllowedReasonMessage_ActionDoesNotExist,
+                        ServicesConstants.UpdatePartnerActionMap_NotAllowedReasonMessage_PartnerDoesNotExist,
+                        ServicesConstants.UpdatePartnerActionMap_NotAllowedReasonMessage_MapAlreadyExists,
+                    };
+
+                    if (allowedErrors.Contains(e.Message ?? ""))
+                    {
+                        return View("CustomError", new CustomErrorViewModel()
+                        {
+                            HeaderMessage = "Not allowed",
+                            Message = e.Message,
+                            ReturnUrls = new Dictionary<string, string>()
+                             {
+                                 { "Back to Edit Partner Action Map page", Url.Action("Edit", "PartnerActionMap", new { area = "Admin" }) },
+                                 { "Go to Partner Action Maps List", Url.Action("Index", "PartnerActionMap", new { area = "Admin" }) },
+                             }
+                        });
                     }
                     else
-                    {
-                        throw;
-                    }
+                        return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception e)
+                {
+                    // log error here
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", partnerActionMap.ActionId);
-            ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Id", partnerActionMap.PartnerId);
-            return View(partnerActionMap);
+            ViewData["ActionId"] = new SelectList(_actionFactory.GetAllActions(), "Id", "Name", map.ActionId);
+            ViewData["PartnerId"] = new SelectList(_partnerFactory.GetAllPartners(), "Id", "Name", map.PartnerId);
+            return View(map);
         }
 
         // GET: Admin/PartnerActionMap/Delete/5
@@ -135,16 +195,13 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var partnerActionMap = await _context.PartnerActionMap
-                .Include(p => p.Action)
-                .Include(p => p.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (partnerActionMap == null)
+            var map = _factory.GetMap(id);
+            if (map == null)
             {
                 return NotFound();
             }
 
-            return View(partnerActionMap);
+            return View(map);
         }
 
         // POST: Admin/PartnerActionMap/Delete/5
@@ -152,15 +209,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var partnerActionMap = await _context.PartnerActionMap.FindAsync(id);
-            _context.PartnerActionMap.Remove(partnerActionMap);
-            await _context.SaveChangesAsync();
+            _factory.DeleteMap(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PartnerActionMapExists(int id)
-        {
-            return _context.PartnerActionMap.Any(e => e.Id == id);
         }
     }
 }

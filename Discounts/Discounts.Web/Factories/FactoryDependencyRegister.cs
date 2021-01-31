@@ -1,8 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Discounts.Web.Factories
 {
@@ -14,6 +10,7 @@ namespace Discounts.Web.Factories
             serviceCollection.AddScoped<PartnerFactory>();
             serviceCollection.AddScoped<PartnerTypeFactory>();
             serviceCollection.AddScoped<ActionFactory>();
+            serviceCollection.AddScoped<PartnerActionMapFactory>();
         }
     }
 }

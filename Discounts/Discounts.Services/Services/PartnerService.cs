@@ -62,5 +62,10 @@ namespace Discounts.Services.Services
             _context.Partner.Remove(partner);
             _context.SaveChanges();
         }
+
+        public bool Exists(int? id)
+        {
+            return _context.Partner.Any(x => x.Id == id);
+        }
     }
 }

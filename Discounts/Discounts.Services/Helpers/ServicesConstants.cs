@@ -11,5 +11,11 @@ namespace Discounts.Services.Helpers
         public const string DeletePartner_NotAllowedReasonMessage_PartnerHasUsedActions = "Invalid operation. This Partner has Used Actions and as such cannot be deleted. First delete all UsedAction records tied to it.";
         public const string DeletePartner_NotAllowedReasonMessage_PartnerHasActions = "Invalid operation. This Partner has Actions and as such cannot be deleted. First delete all Action records tied to it.";
         public const string DeletePartnerType_NotAllowedReasonMessage_PartnerTypeHasPartners = "Invalid operation. This Partner Pype has Partners and as such cannot be deleted. First delete all references tied to it.";
+        public const string CreatePartnerActionMap_NotAllowedReasonMessage_MapAlreadyExists = "Invalid operation. A mapping with this Partner and Action already exists.";
+        public const string CreatePartnerActionMap_NotAllowedReasonMessage_PartnerDoesNotExist = "Invalid operation. No Partner found with supplied Id.";
+        public const string CreatePartnerActionMap_NotAllowedReasonMessage_ActionDoesNotExist = "Invalid operation. No Action found with supplied Id.";
+        public const string UpdatePartnerActionMap_NotAllowedReasonMessage_MapAlreadyExists = "Invalid operation. A mapping with this Partner and Action already exists.";
+        public const string UpdatePartnerActionMap_NotAllowedReasonMessage_PartnerDoesNotExist = "Invalid operation. No Partner found with supplied Id.";
+        public const string UpdatePartnerActionMap_NotAllowedReasonMessage_ActionDoesNotExist = "Invalid operation. No Action found with supplied Id.";
     }
 }

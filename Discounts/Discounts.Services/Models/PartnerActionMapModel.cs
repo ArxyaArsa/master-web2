@@ -11,7 +11,7 @@ namespace Discounts.Services.Models
         public int ActionId { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public PartnerModel Partner { get; set; }
-        public ActionModel Action { get; set; }
+        public string PartnerName { get; set; }
+        public string ActionName { get; set; }
     }
 }

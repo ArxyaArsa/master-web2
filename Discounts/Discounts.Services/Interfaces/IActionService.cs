@@ -10,6 +10,7 @@ namespace Discounts.Services.Interfaces
     {
         IEnumerable<DiscountAction> GetActions();
         DiscountAction GetAction(int? id);
+        bool Exists(int? id);
         DiscountAction Create(DiscountAction model);
         DiscountAction Update(DiscountAction model);
         void Delete(int? id);
