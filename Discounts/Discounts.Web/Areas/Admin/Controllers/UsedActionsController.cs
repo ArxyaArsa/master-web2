@@ -53,7 +53,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         {
             ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name");
             ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.DiscountUser, "Id", "UserName");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -72,7 +72,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             }
             ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
             ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.DiscountUser, "Id", "UserName", usedAction.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
             return View(usedAction);
         }
 
@@ -91,7 +91,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             }
             ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
             ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.DiscountUser, "Id", "UserName", usedAction.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
             return View(usedAction);
         }
 
@@ -129,7 +129,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
             }
             ViewData["ActionId"] = new SelectList(_context.DiscountAction, "Id", "Name", usedAction.ActionId);
             ViewData["PartnerId"] = new SelectList(_context.Partner, "Id", "Name", usedAction.PartnerId);
-            ViewData["UserId"] = new SelectList(_context.DiscountUser, "Id", "UserName", usedAction.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", usedAction.UserId);
             return View(usedAction);
         }
 

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
@@ -14,17 +16,19 @@ namespace Discounts.Web.Areas.Admin.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserFactory _userFactory;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context, UserFactory userFactory)
         {
             _context = context;
+            _userFactory = userFactory;
         }
 
         // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.DiscountUser.Include(d => d.Partner);
-            return View(await applicationDbContext.ToListAsync());
+            var users = _userFactory.GetAllUsers();
+            return View(users);
         }
 
         // GET: Admin/Users/Details/5
@@ -35,21 +39,20 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
-                .Include(d => d.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (discountsUser == null)
+            var userModel = _userFactory.GetUser(id);
+            if (userModel == null)
             {
                 return NotFound();
             }
 
-            return View(discountsUser);
+            return View(userModel);
         }
 
         // GET: Admin/Users/Create
         public IActionResult Create()
         {
             ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name");
+            ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", new List<string>());
             return View();
         }
 
@@ -58,16 +61,15 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Create([Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount,Roles")] UserModel userModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(discountsUser);
-                await _context.SaveChangesAsync();
+                _userFactory.CreateUser(userModel);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            return View(userModel);
         }
 
         // GET: Admin/Users/Edit/5
@@ -78,13 +80,14 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            if (discountsUser == null)
+            var userModel = _userFactory.GetUser(id);
+            if (userModel == null)
             {
                 return NotFound();
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
+            return View(userModel);
         }
 
         // POST: Admin/Users/Edit/5
@@ -92,9 +95,9 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] DiscountsUser discountsUser)
+        public async Task<IActionResult> Edit(int id, [Bind("PartnerId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount,Roles")] UserModel userModel)
         {
-            if (id != discountsUser.Id)
+            if (id != userModel.Id)
             {
                 return NotFound();
             }
@@ -103,12 +106,11 @@ namespace Discounts.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(discountsUser);
-                    await _context.SaveChangesAsync();
+                    _userFactory.UpdateUser(userModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DiscountsUserExists(discountsUser.Id))
+                    if (!_userFactory.UserExists(userModel.Id))
                     {
                         return NotFound();
                     }
@@ -119,8 +121,9 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", discountsUser.PartnerId);
-            return View(discountsUser);
+            ViewData["PartnerId"] = new SelectList(_context.Set<Partner>(), "Id", "Name", userModel.PartnerId);
+            ViewData["Roles"] = new SelectList(_userFactory.GetAllRoles(), "Name", "Name", userModel.Roles);
+            return View(userModel);
         }
 
         // GET: Admin/Users/Delete/5
@@ -131,7 +134,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountsUser = await _context.DiscountUser
+            var discountsUser = await _context.Users
                 .Include(d => d.Partner)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (discountsUser == null)
@@ -147,15 +150,10 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var discountsUser = await _context.DiscountUser.FindAsync(id);
-            _context.DiscountUser.Remove(discountsUser);
+            var discountsUser = await _context.Users.FindAsync(id);
+            _context.Users.Remove(discountsUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DiscountsUserExists(int id)
-        {
-            return _context.DiscountUser.Any(e => e.Id == id);
         }
     }
 }

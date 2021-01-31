@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Discounts.DataLayer.Helpers;
+using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
@@ -23,7 +24,7 @@ namespace Discounts.DataLayer.Configs
 
             builder.ToTable("AspNetRoleClaims");
 
-            builder.HasOne(typeof(IdentityRole<int>))
+            builder.HasOne(typeof(DiscountsRole))
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);

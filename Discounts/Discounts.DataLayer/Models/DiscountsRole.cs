@@ -5,12 +5,8 @@ using System.Text;
 
 namespace Discounts.DataLayer.Models
 {
-    public class DiscountsUser : IdentityUser<int>
+    public class DiscountsRole : IdentityRole<int>
     {
-        public int? PartnerId { get; set; }
-
-        public virtual Partner Partner { get; set; }
-        public virtual ICollection<UsedAction> UsedActions { get; set; }
         public virtual ICollection<DiscountsUserRole> UserRoleMaps { get; set; }
     }
 }

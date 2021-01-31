@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
@@ -26,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Discounts.DataLayer\Discounts.DataLayer.csproj" />
+    <ProjectReference Include="..\Discounts.Services\Discounts.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

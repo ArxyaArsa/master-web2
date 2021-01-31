@@ -7,9 +7,9 @@ using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
-    public class IdentityUserRoleConfig : IEntityTypeConfiguration<IdentityUserRole<int>>
+    public class IdentityUserRoleConfig : IEntityTypeConfiguration<DiscountsUserRole>
     {
-        public void Configure(EntityTypeBuilder<IdentityUserRole<int>> builder)
+        public void Configure(EntityTypeBuilder<DiscountsUserRole> builder)
         {
             builder.Property(x => x.UserId);
             builder.Property(x => x.RoleId);
@@ -19,14 +19,14 @@ namespace Discounts.DataLayer.Configs
             
             builder.ToTable("AspNetUserRoles");
 
-            builder.HasOne(typeof(IdentityRole<int>))
-                        .WithMany()
-                        .HasForeignKey("RoleId")
+            builder.HasOne(x => x.Role)
+                        .WithMany(x => x.UserRoleMaps)
+                        .HasForeignKey(x => x.RoleId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(typeof(DiscountsUser))
-                .WithMany()
-                .HasForeignKey("UserId")
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.UserRoleMaps)
+                .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

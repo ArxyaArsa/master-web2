@@ -13,6 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discounts.Services;
+using AutoMapper;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
 
 namespace Discounts.Web
 {
@@ -35,11 +39,16 @@ namespace Discounts.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAutoMapper(typeof(DomainToModelMapper));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DiscountsConnection")));
             services.AddDefaultIdentity<DiscountsUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddServiceDependencies();
+            services.AddFactories();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

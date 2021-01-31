@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Discounts.DataLayer.Models.DiscountsUser>
+﻿@model IEnumerable<Discounts.Services.Models.UserModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,9 +12,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Partner)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
@@ -36,15 +33,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.AccessFailedCount)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartnerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Roles)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Partner.Name)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
@@ -65,6 +65,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AccessFailedCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartnerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Roles)
             </td>
             <td>
                 <a asp-action="Edit" asp-area="Admin" asp-route-id="@item.Id">Edit</a> |

@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Discounts.DataLayer.Helpers;
+using Discounts.DataLayer.Models;
 
 namespace Discounts.DataLayer.Configs
 {
-    public class IdentityRoleConfig : IEntityTypeConfiguration<IdentityRole<int>>
+    public class IdentityRoleConfig : IEntityTypeConfiguration<DiscountsRole>
     {
-        public void Configure(EntityTypeBuilder<IdentityRole<int>> builder)
+        public void Configure(EntityTypeBuilder<DiscountsRole> builder)
         {
             builder.Property(x => x.Id)
                         .ValueGeneratedOnAdd()

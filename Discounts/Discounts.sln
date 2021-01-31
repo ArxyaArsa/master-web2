@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discounts.Web", "Discounts.Web\Discounts.Web.csproj", "{DFE95E5E-7EAA-473B-B235-FED8C9BFBDB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discounts.DataLayer", "Discounts.DataLayer\Discounts.DataLayer.csproj", "{782DC5C8-5E2F-48CB-B642-18DB3BE88BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discounts.DataLayer", "Discounts.DataLayer\Discounts.DataLayer.csproj", "{782DC5C8-5E2F-48CB-B642-18DB3BE88BAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discounts.Services", "Discounts.Services\Discounts.Services.csproj", "{90C7F7BF-B8E4-4BD3-AB96-5E3B6772F23A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{782DC5C8-5E2F-48CB-B642-18DB3BE88BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{782DC5C8-5E2F-48CB-B642-18DB3BE88BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{782DC5C8-5E2F-48CB-B642-18DB3BE88BAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C7F7BF-B8E4-4BD3-AB96-5E3B6772F23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C7F7BF-B8E4-4BD3-AB96-5E3B6772F23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C7F7BF-B8E4-4BD3-AB96-5E3B6772F23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C7F7BF-B8E4-4BD3-AB96-5E3B6772F23A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
