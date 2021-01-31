@@ -1,7 +1,7 @@
-﻿@model Discounts.DataLayer.Models.DiscountAction
+﻿@model Discounts.Services.Models.ActionModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Action";
 }
 
 <h2>Edit</h2>
@@ -34,11 +34,6 @@
                 <span asp-validation-for="PercentValue" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
@@ -50,13 +45,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
+                <input asp-for="IsCanceled" class="form-control" type="checkbox" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CancelDate" class="control-label"></label>
-                <input asp-for="CancelDate" class="form-control" />
-                <span asp-validation-for="CancelDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CancelReason" class="control-label"></label>

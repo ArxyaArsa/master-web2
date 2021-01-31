@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Discounts.DataLayer;
 using Discounts.DataLayer.Models;
+using Discounts.Web.Factories;
+using Discounts.Services.Models;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
     public class ActionsController : AdminBaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ActionFactory _actionFactory;
 
-        public ActionsController(ApplicationDbContext context)
+        public ActionsController(ActionFactory actionFactory)
         {
-            _context = context;
+            _actionFactory = actionFactory;
         }
 
         // GET: Admin/Actions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DiscountAction.ToListAsync());
+            return View(_actionFactory.GetAllActions());
         }
 
         // GET: Admin/Actions/Details/5
@@ -33,8 +35,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountAction = await _context.DiscountAction
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var discountAction = _actionFactory.GetAction(id);
             if (discountAction == null)
             {
                 return NotFound();
@@ -54,12 +55,11 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CashValue,PercentValue,CreatedDate,StartDate,EndDate,IsCanceled,CancelDate,CancelReason")] DiscountAction discountAction)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,CashValue,PercentValue,CreatedDate,StartDate,EndDate,IsCanceled,CancelDate,CancelReason")] ActionModel discountAction)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(discountAction);
-                await _context.SaveChangesAsync();
+                _actionFactory.CreateAction(discountAction);
                 return RedirectToAction(nameof(Index));
             }
             return View(discountAction);
@@ -73,7 +73,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountAction = await _context.DiscountAction.FindAsync(id);
+            var discountAction = _actionFactory.GetAction(id);
             if (discountAction == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CashValue,PercentValue,CreatedDate,StartDate,EndDate,IsCanceled,CancelDate,CancelReason")] DiscountAction discountAction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CashValue,PercentValue,CreatedDate,StartDate,EndDate,IsCanceled,CancelDate,CancelReason")] ActionModel discountAction)
         {
             if (id != discountAction.Id)
             {
@@ -95,22 +95,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(discountAction);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DiscountActionExists(discountAction.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _actionFactory.UpdateAction(discountAction);
                 return RedirectToAction(nameof(Index));
             }
             return View(discountAction);
@@ -124,8 +109,7 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var discountAction = await _context.DiscountAction
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var discountAction = _actionFactory.GetAction(id);
             if (discountAction == null)
             {
                 return NotFound();
@@ -139,15 +123,8 @@ namespace Discounts.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var discountAction = await _context.DiscountAction.FindAsync(id);
-            _context.DiscountAction.Remove(discountAction);
-            await _context.SaveChangesAsync();
+            _actionFactory.DeleteAction(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DiscountActionExists(int id)
-        {
-            return _context.DiscountAction.Any(e => e.Id == id);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Discounts.Web.Factories
             serviceCollection.AddScoped<UserFactory>();
             serviceCollection.AddScoped<PartnerFactory>();
             serviceCollection.AddScoped<PartnerTypeFactory>();
+            serviceCollection.AddScoped<ActionFactory>();
         }
     }
 }
