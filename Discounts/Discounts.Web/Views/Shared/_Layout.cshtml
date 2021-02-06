@@ -1,6 +1,8 @@
 ﻿@{ 
-    bool adminArea = ViewData["Area"] == "Admin";
+    bool adminArea = (ViewData["Area"] as string) == "Admin";
     bool isAdmin = User.IsInRole("admin");
+    bool userArea = (ViewData["Area"] as string) == "User";
+    bool isUser = User.IsInRole("user");
 }
 
 <!DOCTYPE html>
@@ -40,24 +42,41 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (isAdmin && !adminArea)
                     {
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle"><strong>Admin</strong> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <partial name="_Adminlinks" />
-                        </ul>
-                    </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"><strong>Admin</strong> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <partial name="_AdminLinks" />
+                            </ul>
+                        </li>
+                    }
+                    @if ((isAdmin || isUser) && !userArea)
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"><strong>User</strong> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <partial name="_UserLinks" />
+                            </ul>
+                        </li>
                     }
                 </ul>
                 <partial name="_LoginPartial" />
+                @if (isAdmin && adminArea)
+                {
+                    <div class="navbar-collapse collapse subMenu">
+                        <ul class="nav navbar-nav">
+                            <partial name="_AdminLinks" />
+                        </ul>
+                    </div>
+                }
+                @if ((isAdmin || isUser) && userArea)
+                {
+                    <div class="navbar-collapse collapse subMenu">
+                        <ul class="nav navbar-nav">
+                            <partial name="_UserLinks" />
+                        </ul>
+                    </div>
+                }
             </div>
-            @if (isAdmin && adminArea)
-            {
-            <div class="navbar-collapse collapse subMenu">
-                <ul class="nav navbar-nav">
-                    <partial name="_Adminlinks" />
-                </ul>
-            </div>
-            }
         </div>
     </nav>
 

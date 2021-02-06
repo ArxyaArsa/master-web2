@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="Areas\User\Data\" />
   </ItemGroup>
 
 </Project>

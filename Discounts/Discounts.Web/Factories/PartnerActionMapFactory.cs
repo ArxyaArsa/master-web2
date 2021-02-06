@@ -3,6 +3,7 @@ using Discounts.DataLayer.Models;
 using Discounts.Services.Helpers;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Discounts.Web.Factories
 {
     public class PartnerActionMapFactory
     {
+        #region dependencies and constructor
         private readonly IPartnerActionMapService _service;
         private readonly IPartnerService _partnerService;
         private readonly IActionService _actionService;
@@ -24,7 +26,9 @@ namespace Discounts.Web.Factories
             _actionService = actionService;
             _mapper = mapper;
         }
+        #endregion
 
+        #region Admin Area
         public IEnumerable<PartnerActionMapModel> GetAllMaps()
         {
             return _service.GetPartnerActionMaps().Select(x => _mapper.Map<PartnerActionMap, PartnerActionMapModel>(x));
@@ -77,5 +81,28 @@ namespace Discounts.Web.Factories
         {
             _service.Delete(id);
         }
+#endregion
+
+        #region User Area
+        public IEnumerable<ViewByActionModel> GetActionsForViewByAction(int partnerId, int userId)
+        {
+            return _service.GetPartnerActionMaps().Where(x => x.PartnerId == partnerId).Select(x => new ViewByActionModel()
+            {
+                Id = x.Action.Id,
+                Name = x.Action.Name,
+                StartDate = x.Action.StartDate,
+                EndDate = x.Action.EndDate,
+                CancelDate = x.Action.CancelDate,
+                CancelReason = x.Action.CancelReason,
+                CashValue = x.Action.CashValue,
+                CreatedDate = x.Action.CreatedDate,
+                Description = x.Action.Description,
+                IsCanceled = x.Action.IsCanceled ?? false,
+                IsFinished = x.Action.EndDate < DateTime.Now,
+                IsUsed = x.Action.UsedActions.Where(y => y.UserId == userId && y.ActionId == x.ActionId).Count() > 0,
+                PercentValue = x.Action.PercentValue
+            });
+        }
+        #endregion
     }
 }

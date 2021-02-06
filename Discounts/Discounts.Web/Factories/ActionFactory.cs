@@ -2,6 +2,7 @@
 using Discounts.DataLayer.Models;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Discounts.Web.Factories
 {
     public class ActionFactory
     {
+        #region dependencies and constructor
         private readonly IActionService _actionService;
         private readonly IMapper _mapper;
 
@@ -19,7 +21,9 @@ namespace Discounts.Web.Factories
             _actionService = actionService;
             _mapper = mapper;
         }
+        #endregion
 
+        #region Admin Area
         public IEnumerable<ActionModel> GetAll()
         {
             return _actionService.GetActions().Select(x => _mapper.Map<DiscountAction, ActionModel>(x));
@@ -58,5 +62,6 @@ namespace Discounts.Web.Factories
         {
             _actionService.Delete(id);
         }
+        #endregion
     }
 }

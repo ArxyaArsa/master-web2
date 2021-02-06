@@ -2,6 +2,7 @@
 using Discounts.DataLayer.Models;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,5 +52,20 @@ namespace Discounts.Web.Factories
         {
             _partnerTypeService.Delete(id);
         }
+
+        #region User Area
+
+        public IEnumerable<ViewByCategoryModel> GetCategoriesForViewByCategory()
+        {
+            return _partnerTypeService.GetPartnerTypes().Select(x => new ViewByCategoryModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                PartnerCount = x.Partners.Count(),
+                ActionCount = x.Partners.Select(y => y.PartnerActionMaps.Count()).Sum()
+            });
+        }
+
+        #endregion
     }
 }

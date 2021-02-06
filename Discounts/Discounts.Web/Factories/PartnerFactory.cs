@@ -2,6 +2,7 @@
 using Discounts.DataLayer.Models;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Discounts.Web.Factories
 {
     public class PartnerFactory
     {
+        #region dependencies and constructor
         private readonly IPartnerService _partnerService;
         private readonly IMapper _mapper;
 
@@ -19,7 +21,9 @@ namespace Discounts.Web.Factories
             _partnerService = partnerService;
             _mapper = mapper;
         }
+        #endregion
 
+        #region Admin Area
         public IEnumerable<PartnerModel> GetAll()
         {
             return _partnerService.GetPartners().Select(x => _mapper.Map<Partner, PartnerModel>(x));
@@ -55,5 +59,25 @@ namespace Discounts.Web.Factories
         {
             _partnerService.Delete(id);
         }
+        #endregion
+
+        #region User Area
+
+        public IEnumerable<ViewByPartnerModel> GetPartnersForViewByPartner(int partnerTypeId)
+        {
+            return _partnerService.GetPartners().Where(x => x.PartnerTypeId == partnerTypeId).Select(x => new ViewByPartnerModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ActionCount = x.PartnerActionMaps.Count(),
+                UsedActionCount = x.UsedActions.Count(),
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                PartnerTypeId = x.PartnerTypeId,
+                PartnerTypeName = x.PartnerType.Name
+            });
+        }
+
+        #endregion
     }
 }

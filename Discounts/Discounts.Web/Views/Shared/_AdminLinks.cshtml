@@ -1,5 +1,5 @@
 ﻿@{
-    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var controllerName = this.ViewContext.RouteData.Values["controller"]?.ToString();
     var list = new[]
 {
         new { Controller="Users", Action="Index", Text="Users" },
