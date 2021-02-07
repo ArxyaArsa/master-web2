@@ -14,11 +14,13 @@ namespace Discounts.Web.Areas.Partner.Controllers
         #region dependencies and constructor
         private readonly UserFactory _userFactory;
         private readonly PartnerFactory _partnerFactory;
+        private readonly PartnerActionMapFactory _partnerActionMapFactory;
 
-        public MainController(UserFactory userFactory, PartnerFactory partnerFactory)
+        public MainController(UserFactory userFactory, PartnerFactory partnerFactory, PartnerActionMapFactory partnerActionMapFactory)
         {
             _userFactory = userFactory;
             _partnerFactory = partnerFactory;
+            _partnerActionMapFactory = partnerActionMapFactory;
         }
         #endregion
 
@@ -47,7 +49,6 @@ namespace Discounts.Web.Areas.Partner.Controllers
                 if (User.IsInRole(WebConstants.AdminRole))
                 {
                     var user = _userFactory.GetUser(User.Identity.Name);
-
                     if (user.PartnerId != null)
                         return RedirectToAction(nameof(Home), new { id = user.PartnerId.Value });
                     else
@@ -102,6 +103,57 @@ namespace Discounts.Web.Areas.Partner.Controllers
             }
 
             var model = _partnerFactory.GetPartnerForPartnerHomeView(id);
+
+            return View(model);
+        }
+
+        public IActionResult PartnerActions(int partnerId)
+        {
+            if (!IsUserAllowedForPartner(partnerId))
+                return Unauthorized();
+
+            var user = _userFactory.GetUser(User.Identity.Name);
+            if (User.IsInRole(WebConstants.AdminRole))
+            {
+                if (user.PartnerId != partnerId)
+                {
+                    user.PartnerId = partnerId;
+                    _userFactory.UpdateUser(user);
+                }
+            }
+
+            var partner = _partnerFactory.GetPartner(partnerId);
+
+            ViewData["PartnerId"] = partnerId;
+            ViewData["PartnerName"] = partner.Name;
+
+            var model = _partnerActionMapFactory.GetActionsForPartnerActionsView(partnerId, user.Id);
+
+            return View(model);
+        }
+
+        public IActionResult PartnerActionDetails(int partnerId, int actionId)
+        {
+            if (!IsUserAllowedForPartner(partnerId))
+                return Unauthorized();
+
+            var user = _userFactory.GetUser(User.Identity.Name);
+            if (User.IsInRole(WebConstants.AdminRole))
+            {
+                if (user.PartnerId != partnerId)
+                {
+                    user.PartnerId = partnerId;
+                    _userFactory.UpdateUser(user);
+                }
+            }
+
+            var partner = _partnerFactory.GetPartner(partnerId);
+
+            ViewData["PartnerId"] = partnerId;
+            ViewData["PartnerName"] = partner.Name;
+            ViewData["ActionId"] = actionId;
+
+            var model = _partnerActionMapFactory.GetActionForPartnerActionDetailsView(partnerId, user.Id, actionId);
 
             return View(model);
         }

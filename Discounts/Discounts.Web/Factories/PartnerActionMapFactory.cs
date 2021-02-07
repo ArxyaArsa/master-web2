@@ -3,6 +3,7 @@ using Discounts.DataLayer.Models;
 using Discounts.Services.Helpers;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.Partner.Models;
 using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
@@ -107,6 +108,33 @@ namespace Discounts.Web.Factories
         public ViewByActionModel GetActionForActionDetailsView(int partnerId, int userId, int actionId)
         {
             return GetActionsForViewByAction(partnerId, userId).Where(x => x.Id == actionId).FirstOrDefault();
+        }
+        #endregion
+
+        #region Partner Area
+        public IEnumerable<ActionViewModel> GetActionsForPartnerActionsView(int partnerId, int userId)
+        {
+            return _service.GetPartnerActionMaps().Where(x => x.PartnerId == partnerId).Select(x => new ActionViewModel()
+            {
+                Id = x.Action.Id,
+                Name = x.Action.Name,
+                StartDate = x.Action.StartDate,
+                EndDate = x.Action.EndDate,
+                CancelDate = x.Action.CancelDate,
+                CancelReason = x.Action.CancelReason,
+                CashValue = x.Action.CashValue,
+                CreatedDate = x.Action.CreatedDate,
+                Description = x.Action.Description,
+                IsCanceled = x.Action.IsCanceled ?? false,
+                IsFinished = x.Action.EndDate < DateTime.Now,
+                IsUsed = x.Action.UsedActions.Where(y => y.UserId == userId && y.ActionId == x.ActionId).Count() > 0,
+                PercentValue = x.Action.PercentValue
+            });
+        }
+
+        public ActionViewModel GetActionForPartnerActionDetailsView(int partnerId, int userId, int actionId)
+        {
+            return GetActionsForPartnerActionsView(partnerId, userId).Where(x => x.Id == actionId).FirstOrDefault();
         }
         #endregion
     }

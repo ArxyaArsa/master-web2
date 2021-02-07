@@ -1,17 +1,14 @@
-﻿@model ViewByActionModel
+﻿@model ActionViewModel
 
 @{
-    ViewData["Title"] = "Actions";
+    ViewData["Title"] = "Action - " + Model.Name;
     int r = 0;
 }
 
 <h2>Action - @(Model.Name)</h2>
 
 <div>
-    [<a asp-action="Index">Categories</a>] -> 
-    [<a href="@Url.Action("ViewByPartner", "Main", new { area = "User", id = ViewData["CategoryId"] })">Category - @ViewData["CategoryName"]</a>] -> 
-    [<a href="@Url.Action("ViewByAction", "Main", new { area = "User", id = ViewData["PartnerId"] })">Partner - @ViewData["PartnerName"]</a>] -> 
-    [Action - @Model.Name]
+    <a href="@Url.Action("PartnerActions", "Main", new { area = "Partner", partnerId = ViewData["PartnerId"] })">Back to Discount Action List</a>
 </div>
 
 <br />
@@ -66,14 +63,34 @@
         <dd>
             @Html.DisplayFor(model => model.IsUsed)
         </dd>
-        <br />
         <dt>
-            <strong><i>Your read code: </i></strong>
+            @Html.DisplayNameFor(model => model.CreatedDate)
         </dt>
         <dd>
-            @ViewData["CategoryId"]-@ViewData["PartnerId"]-@ViewData["UserId"]-@Model.Id
+            @Html.DisplayFor(model => model.CreatedDate)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCanceled)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCanceled)
+        </dd>
+@if (Model.IsCanceled == true)
+{
+        <dt>
+            @Html.DisplayNameFor(model => model.CancelDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CancelDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CancelReason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CancelReason)
+        </dd>
+}
     </dl>
 </div>
 
-<script src="~/js/User/ActionDetails.js" type="text/javascript"></script>
+<script src="~/js/User/ViewByAction.js" type="text/javascript"></script>

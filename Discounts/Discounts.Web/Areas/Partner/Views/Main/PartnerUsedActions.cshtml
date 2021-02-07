@@ -21,14 +21,12 @@
         <dd>
             @Html.DisplayFor(model => model.PartnerTypeName)
         </dd>
-        <a asp-action="PartnerActions" asp-route-partnerId="@Model.Id">
-            <dt>
-                @Html.DisplayNameFor(model => model.ActionCount)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.ActionCount)
-            </dd>
-        </a>
+        <dt>
+            @Html.DisplayNameFor(model => model.ActionCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ActionCount)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.UsedActionCount)
         </dt>
