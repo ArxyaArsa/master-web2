@@ -24,10 +24,16 @@ namespace Discounts.Web.Helpers
             var ci = (ClaimsIdentity)principal.Identity;
 
             var roles = _context.UserRoles.Where(x => x.User.UserName == ci.Name).Select(x => x.Role.Name).ToList();
-
             if (roles != null && roles.Count > 0)
             {
                 ci.AddClaims(roles.Select(x => new Claim(ci.RoleClaimType, x)));
+            }
+
+            var partnerId = _context.Users.FirstOrDefault(x => x.UserName == ci.Name)?.PartnerId;
+
+            if (partnerId != null)
+            {
+                ci.AddClaim(new Claim(WebConstants.PartnerClaimType, partnerId.Value.ToString()));
             }
 
             return Task.FromResult(principal);

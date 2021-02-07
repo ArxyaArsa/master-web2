@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Discounts.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
-    [Authorize (Roles = "admin")]
+    [DiscountsAuthorize(RolesArray = new[] { WebConstants.AdminRole })]
     [Area ("Admin")]
     public class AdminBaseController : Controller
     {

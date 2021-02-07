@@ -2,6 +2,7 @@
 using Discounts.DataLayer.Models;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.Partner.Models;
 using Discounts.Web.Areas.User.Models;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,25 @@ namespace Discounts.Web.Factories
                 PartnerTypeId = x.PartnerTypeId,
                 PartnerTypeName = x.PartnerType.Name
             });
+        }
+
+        #endregion
+
+        #region Partner Area
+
+        public PartnerViewModel GetPartnerForPartnerHomeView(int partnerId)
+        {
+            return _partnerService.GetPartners().Where(x => x.Id == partnerId).Select(x => new PartnerViewModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ActionCount = x.PartnerActionMaps.Count(),
+                UsedActionCount = x.UsedActions.Count(),
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                PartnerTypeId = x.PartnerTypeId,
+                PartnerTypeName = x.PartnerType.Name
+            }).FirstOrDefault();
         }
 
         #endregion

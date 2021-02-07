@@ -29,7 +29,7 @@ namespace Discounts.Web.Areas.User.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("ViewByCategory");
+            return RedirectToAction(nameof(ViewByCategory));
         }
 
         public IActionResult ViewByCategory()

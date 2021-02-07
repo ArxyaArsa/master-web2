@@ -1,0 +1,51 @@
+﻿@model PartnerViewModel
+
+@{
+    ViewData["Title"] = "Partner Home";
+    int r = 0;
+}
+
+<h2>Partner Home Page - @(Model.Name)</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PartnerTypeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PartnerTypeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ActionCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ActionCount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UsedActionCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UsedActionCount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+    </dl>
+</div>
+
+<script src="~/js/Partner/PartnerHome.js" type="text/javascript"></script>

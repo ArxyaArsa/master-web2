@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Discounts.Web.Areas.User.Models
+namespace Discounts.Web.Areas.Partner.Models
 {
     public class CustomErrorViewModel
     {

@@ -1,8 +1,10 @@
 ﻿@{ 
     bool adminArea = (ViewData["Area"] as string) == "Admin";
-    bool isAdmin = User.IsInRole("admin");
+    bool isAdmin = User.IsInRole(WebConstants.AdminRole);
     bool userArea = (ViewData["Area"] as string) == "User";
-    bool isUser = User.IsInRole("user");
+    bool isUser = User.IsInRole(WebConstants.UserRole);
+    bool partnerArea = (ViewData["Area"] as string) == "Partner";
+    bool isPartner = User.IsInRole(WebConstants.PartnerRole);
 }
 
 <!DOCTYPE html>
@@ -58,6 +60,15 @@
                             </ul>
                         </li>
                     }
+                    @if ((isAdmin || isPartner) && !partnerArea)
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"><strong>Partner</strong> <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <partial name="_PartnerLinks" />
+                            </ul>
+                        </li>
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
@@ -74,6 +85,14 @@
                 <div class="navbar-collapse collapse subMenu">
                     <ul class="nav navbar-nav">
                         <partial name="_UserLinks" />
+                    </ul>
+                </div>
+            }
+            @if ((isAdmin || isPartner) && partnerArea)
+            {
+                <div class="navbar-collapse collapse subMenu">
+                    <ul class="nav navbar-nav">
+                        <partial name="_PartnerLinks" />
                     </ul>
                 </div>
             }
