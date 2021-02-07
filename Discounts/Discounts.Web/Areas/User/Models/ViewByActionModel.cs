@@ -10,7 +10,7 @@ namespace Discounts.Web.Areas.User.Models
     {
         public int Id { get; set; }
 
-        [DisplayName("Action")]
+        [DisplayName("Discount Action")]
         public string Name { get; set; }
 
         [DisplayName("Description")]

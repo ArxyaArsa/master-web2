@@ -60,29 +60,29 @@
                     }
                 </ul>
                 <partial name="_LoginPartial" />
-                @if (isAdmin && adminArea)
-                {
-                    <div class="navbar-collapse collapse subMenu">
-                        <ul class="nav navbar-nav">
-                            <partial name="_AdminLinks" />
-                        </ul>
-                    </div>
-                }
-                @if ((isAdmin || isUser) && userArea)
-                {
-                    <div class="navbar-collapse collapse subMenu">
-                        <ul class="nav navbar-nav">
-                            <partial name="_UserLinks" />
-                        </ul>
-                    </div>
-                }
             </div>
+            @if (isAdmin && adminArea)
+            {
+                <div class="navbar-collapse collapse subMenu">
+                    <ul class="nav navbar-nav">
+                        <partial name="_AdminLinks" />
+                    </ul>
+                </div>
+            }
+            @if ((isAdmin || isUser) && userArea)
+            {
+                <div class="navbar-collapse collapse subMenu">
+                    <ul class="nav navbar-nav">
+                        <partial name="_UserLinks" />
+                    </ul>
+                </div>
+            }
         </div>
     </nav>
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
+    <div class="container body-content" style="margin-top:50px">
         @RenderBody()
         <hr />
         <footer>

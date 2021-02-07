@@ -103,6 +103,11 @@ namespace Discounts.Web.Factories
                 PercentValue = x.Action.PercentValue
             });
         }
+
+        public ViewByActionModel GetActionForActionDetailsView(int partnerId, int userId, int actionId)
+        {
+            return GetActionsForViewByAction(partnerId, userId).Where(x => x.Id == actionId).FirstOrDefault();
+        }
         #endregion
     }
 }

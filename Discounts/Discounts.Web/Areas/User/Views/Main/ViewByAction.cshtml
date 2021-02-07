@@ -5,11 +5,15 @@
     int r = 0;
 }
 
-<h2>Actions - @ViewData["Partner"] Partner</h2>
+<h2>Partner - @ViewData["PartnerName"]</h2>
 
 <div>
-    <a asp-action="Index">Categories</a> -> <a href="@Url.Action("", "", new { area = "", id = "" })">Categories</a>
+    [<a asp-action="Index">Categories</a>] -> 
+    [<a href="@Url.Action("ViewByPartner", "Main", new { area = "User", id = ViewData["CategoryId"] })">Category - @ViewData["CategoryName"]</a>] -> 
+    [Partner - @ViewData["PartnerName"]]
 </div>
+
+<br />
 
 <table class="table" data-id="partnersTable">
     <thead>
@@ -25,18 +29,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
-        <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>@Html.DisplayFor(modelItem => item.CashValue)</td>
-            <td>@Html.DisplayFor(modelItem => item.PercentValue)</td>
-            <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-            <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
-            <td>@Html.DisplayFor(modelItem => item.IsFinished)</td>
-            <td>@Html.DisplayFor(modelItem => item.IsUsed)</td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
+                <td>
+                    <a asp-action="ActionDetails" asp-route-partnerId="@ViewData["PartnerId"]" asp-route-actionId="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.CashValue)</td>
+                <td>@Html.DisplayFor(modelItem => item.PercentValue)</td>
+                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsFinished)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsUsed)</td>
+            </tr>
+        }
     </tbody>
 </table>
 

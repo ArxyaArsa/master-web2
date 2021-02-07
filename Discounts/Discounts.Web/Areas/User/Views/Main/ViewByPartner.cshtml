@@ -5,11 +5,14 @@
     int r = 0;
 }
 
-<h2>Partners - @ViewData["Category"] Category</h2>
+<h2>Category - @ViewData["CategoryName"]</h2>
 
 <div>
-    <a asp-action="Index">Back to Categories</a>
+    <a asp-action="Index">[Categories]</a> ->
+    [Category - @ViewData["CategoryName"]]
 </div>
+
+<br />
 
 <table class="table" data-id="partnersTable">
     <thead>
@@ -20,13 +23,14 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
-        <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.ActionCount)</td>
-            <td>@Html.DisplayFor(modelItem => item.UsedActionCount)</td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
+                <td><a href="@Url.Action("ViewByAction", "Main", new { area = "User", id = item.Id })">@Html.DisplayFor(modelItem => item.Name)</a></td>
+                <td>@Html.DisplayFor(modelItem => item.ActionCount)</td>
+                <td>@Html.DisplayFor(modelItem => item.UsedActionCount)</td>
+            </tr>
+        }
     </tbody>
 </table>
 

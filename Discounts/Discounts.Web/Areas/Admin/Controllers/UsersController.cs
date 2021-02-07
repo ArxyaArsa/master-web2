@@ -13,6 +13,7 @@ using Discounts.Services.Helpers;
 using Discounts.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Identity;
 
 namespace Discounts.Web.Areas.Admin.Controllers
 {
@@ -21,11 +22,13 @@ namespace Discounts.Web.Areas.Admin.Controllers
         #region non-actions
         private readonly UserFactory _userFactory;
         private readonly PartnerFactory _partnerFactory;
+        private readonly AspNetUserManager<DiscountsUser> _userManager;
 
-        public UsersController(UserFactory userFactory, PartnerFactory partnerFactory)
+        public UsersController(UserFactory userFactory, PartnerFactory partnerFactory, AspNetUserManager<DiscountsUser> userManager)
         {
             _userFactory = userFactory;
             _partnerFactory = partnerFactory;
+            _userManager = userManager;
         }
         #endregion
 
@@ -185,6 +188,33 @@ namespace Discounts.Web.Areas.Admin.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        // GET: Admin/Users/Delete/5
+        public async Task<IActionResult> ChangePassword(int id, string password)
+        {
+            return await ChangePasswordConfirmed(id, password);
+        }
+
+        // POST: Admin/Users/ChangePassword/5
+        [HttpPost, ActionName("ChangePassword")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePasswordConfirmed(int id, string password)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id.ToString());
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var result = await _userManager.ResetPasswordAsync(user, token, password ?? "Arsa.123");
+            }
+            catch (Exception e)
+            {
+                // log error here
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

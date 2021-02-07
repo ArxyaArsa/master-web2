@@ -49,8 +49,8 @@ namespace Discounts.Web.Areas.User.Controllers
             // add error handling
             var model = _partnerFactory.GetPartnersForViewByPartner(id);
 
-            //ViewData["partner"] = _partnerTypeFactory.GetPartnerType(id).Name;
-            //ViewData["CategoryId"] = id;
+            ViewData["CategoryName"] = _partnerTypeFactory.GetPartnerType(id).Name;
+            ViewData["CategoryId"] = id;
 
             return View(model);
         }
@@ -68,8 +68,29 @@ namespace Discounts.Web.Areas.User.Controllers
 
             var model = _partnerActionMapFactory.GetActionsForViewByAction(id, userId);
 
-            //ViewData["Partner"] = _partnerFactory.GetPartner(id).Name;
-            //ViewData["PartnerId"] = id;
+            var partner = _partnerFactory.GetPartner(id);
+            ViewData["PartnerName"] = partner.Name;
+            ViewData["PartnerId"] = id;
+            ViewData["CategoryName"] = partner.PartnerTypeName;
+            ViewData["CategoryId"] = partner.PartnerTypeId;
+
+            return View(model);
+        }
+
+        public IActionResult ActionDetails(int partnerId, int actionId)
+        {
+            // add error handling
+
+            int userId = int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
+            var model = _partnerActionMapFactory.GetActionForActionDetailsView(partnerId, userId, actionId);
+
+            var partner = _partnerFactory.GetPartner(partnerId);
+            ViewData["PartnerName"] = partner.Name;
+            ViewData["PartnerId"] = partnerId;
+            ViewData["CategoryName"] = partner.PartnerTypeName;
+            ViewData["CategoryId"] = partner.PartnerTypeId;
+            ViewData["UserId"] = userId;
 
             return View(model);
         }

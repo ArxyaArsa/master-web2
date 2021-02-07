@@ -49,6 +49,7 @@ namespace Discounts.Web
             services.AddDefaultIdentity<DiscountsUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+            services.AddScoped<AspNetUserManager<DiscountsUser>>();
 
             services.AddServiceDependencies();
             services.AddFactoryDependencies();
