@@ -90,6 +90,14 @@
             @Html.DisplayFor(model => model.CancelReason)
         </dd>
 }
+        <a asp-action="PartnerUsedActions" asp-route-partnerId="@ViewData["PartnerId"]" asp-route-actionId="@Model.Id">
+            <dt>
+                @Html.DisplayNameFor(model => model.ActionUsedCount)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ActionUsedCount) ($@Html.DisplayFor(model => model.ActionUsedAmount))
+            </dd>
+        </a>
     </dl>
 </div>
 

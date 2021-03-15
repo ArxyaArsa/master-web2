@@ -1,51 +1,36 @@
-﻿@model PartnerViewModel
+﻿@model IEnumerable<UsedActionViewModel>
 
 @{
-    ViewData["Title"] = "Partner Home";
+    ViewData["Title"] = "Actions";
     int r = 0;
 }
 
-<h2>Partner Home Page - @(Model.Name)</h2>
+<h2>Partner - @ViewData["PartnerName"]</h2>
 
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PartnerTypeName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PartnerTypeName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ActionCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ActionCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UsedActionCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UsedActionCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-    </dl>
+    <a href="@Url.Action("Index", "Main", new { area = "Partner" })">Back to Partner Home</a>
 </div>
 
-<script src="~/js/Partner/PartnerHome.js" type="text/javascript"></script>
+<br />
+
+<table class="table" data-id="usedActionsTable">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ActionName)</th>
+            <th>@Html.DisplayNameFor(model => model.UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.ActionValue)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
+                <td>@Html.DisplayFor(modelItem => item.ActionName)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ActionValue)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="~/js/Partner/PartnerUsedActions.js" type="text/javascript"></script>

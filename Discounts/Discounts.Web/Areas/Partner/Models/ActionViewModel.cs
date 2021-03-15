@@ -42,5 +42,11 @@ namespace Discounts.Web.Areas.Partner.Models
 
         [DisplayName("Cancel Reason")]
         public string CancelReason { get; set; }
+
+        [DisplayName("Action Usage History")]
+        public int ActionUsedCount { get; set; }
+
+        [DisplayName("Action Usage Amount")]
+        public decimal ActionUsedAmount { get; set; }
     }
 }

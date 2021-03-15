@@ -127,8 +127,10 @@ namespace Discounts.Web.Factories
                 Description = x.Action.Description,
                 IsCanceled = x.Action.IsCanceled ?? false,
                 IsFinished = x.Action.EndDate < DateTime.Now,
-                IsUsed = x.Action.UsedActions.Where(y => y.UserId == userId && y.ActionId == x.ActionId).Count() > 0,
-                PercentValue = x.Action.PercentValue
+                IsUsed = x.Action.UsedActions.Where(y => y.PartnerId == partnerId && y.ActionId == x.ActionId).Count() > 0,
+                PercentValue = x.Action.PercentValue,
+                ActionUsedCount = x.Action.UsedActions.Where(y => y.PartnerId == partnerId && y.ActionId == x.ActionId).Count(),
+                ActionUsedAmount = x.Action.UsedActions.Where(y => y.PartnerId == partnerId && y.ActionId == x.ActionId).Sum(y => y.ActionValue)
             });
         }
 

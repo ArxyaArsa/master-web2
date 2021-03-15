@@ -3,6 +3,7 @@ using Discounts.DataLayer.Models;
 using Discounts.Services.Helpers;
 using Discounts.Services.Interfaces;
 using Discounts.Services.Models;
+using Discounts.Web.Areas.Partner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace Discounts.Web.Factories
         }
         #endregion
 
+        #region Admin
         public IEnumerable<UsedActionModel> GetAll()
         {
             return _service.GetUsedActions().Select(x => _mapper.Map<UsedAction, UsedActionModel>(x));
@@ -91,5 +93,23 @@ namespace Discounts.Web.Factories
         {
             _service.Delete(id);
         }
+        #endregion
+
+        #region Partner
+        public IEnumerable<UsedActionViewModel> GetUsedActionsForPartnerUsedActionsView(int partnerId, int userId, int actionId)
+        {
+            return _service.GetUsedActions().Where(x => x.PartnerId == partnerId && x.ActionId == actionId).Select(x => new UsedActionViewModel()
+            {
+                ActionId = x.ActionId,
+                ActionName = x.Action.Name,
+                ActionValue = x.ActionValue,
+                PartnerId = x.PartnerId,
+                PartnerName = x.Partner.Name,
+                UserId = x.UserId,
+                UserName = x.User.UserName,
+                Id = x.Id
+            });
+        }
+        #endregion
     }
 }

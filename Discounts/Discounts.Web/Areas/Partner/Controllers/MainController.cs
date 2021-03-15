@@ -15,12 +15,19 @@ namespace Discounts.Web.Areas.Partner.Controllers
         private readonly UserFactory _userFactory;
         private readonly PartnerFactory _partnerFactory;
         private readonly PartnerActionMapFactory _partnerActionMapFactory;
+        private readonly UsedActionFactory _usedActionFactory;
 
-        public MainController(UserFactory userFactory, PartnerFactory partnerFactory, PartnerActionMapFactory partnerActionMapFactory)
+        public MainController(
+            UserFactory userFactory, 
+            PartnerFactory partnerFactory, 
+            PartnerActionMapFactory partnerActionMapFactory,
+            UsedActionFactory usedActionFactory
+        )
         {
             _userFactory = userFactory;
             _partnerFactory = partnerFactory;
             _partnerActionMapFactory = partnerActionMapFactory;
+            _usedActionFactory = usedActionFactory;
         }
         #endregion
 
@@ -154,6 +161,26 @@ namespace Discounts.Web.Areas.Partner.Controllers
             ViewData["ActionId"] = actionId;
 
             var model = _partnerActionMapFactory.GetActionForPartnerActionDetailsView(partnerId, user.Id, actionId);
+
+            return View(model);
+        }
+
+        public IActionResult PartnerUsedActions(int partnerId, int actionId)
+        {
+            if (!IsUserAllowedForPartner(partnerId))
+                return Unauthorized();
+
+            var user = _userFactory.GetUser(User.Identity.Name);
+            if (User.IsInRole(WebConstants.AdminRole))
+            {
+                if (user.PartnerId != partnerId)
+                {
+                    user.PartnerId = partnerId;
+                    _userFactory.UpdateUser(user);
+                }
+            }
+
+            var model = _usedActionFactory.GetUsedActionsForPartnerUsedActionsView(partnerId, user.Id, actionId);
 
             return View(model);
         }
