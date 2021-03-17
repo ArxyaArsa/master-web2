@@ -17,7 +17,9 @@ namespace Discounts.DataLayer.Configs
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.PartnerId).IsRequired();
             builder.Property(x => x.ActionId).IsRequired();
-            builder.Property(x => x.ActionValue).HasColumnType("DECIMAL(19,4)").IsRequired();
+            builder.Property(x => x.ActionValue).HasColumnType("DECIMAL(19,2)").IsRequired();
+            builder.Property(x => x.OriginalValue).HasColumnType("DECIMAL(19,2)").IsRequired();
+            builder.Property(x => x.DateCreated);
 
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Partner)

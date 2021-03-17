@@ -19,16 +19,20 @@
             <th>@Html.DisplayNameFor(model => model.ActionName)</th>
             <th>@Html.DisplayNameFor(model => model.UserName)</th>
             <th>@Html.DisplayNameFor(model => model.ActionValue)</th>
+            <th>@Html.DisplayNameFor(model => model.OriginalValue)</th>
+            <th>@Html.DisplayNameFor(model => model.DateCreated)</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
-                <td>@Html.DisplayFor(modelItem => item.ActionName)</td>
-                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.ActionValue)</td>
-            </tr>
+        <tr class="category-row @(r++ % 2 == 1 ? "odd" : "even")" data-category-id="@(item.Id)">
+            <td>@Html.DisplayFor(modelItem => item.ActionName)</td>
+            <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+            <td>@Html.DisplayFor(modelItem => item.ActionValue)</td>
+            <td>@Html.DisplayFor(modelItem => item.OriginalValue)</td>
+            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+        </tr>
         }
     </tbody>
 </table>

@@ -1,0 +1,56 @@
+﻿@using Discounts.Web.Models.Report;
+@model ReportPageModel 
+@{
+}
+
+<form asp-action="Build" asp-controller="Report">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group row">
+        <label asp-for="GroupByAction" class="control-label col-md-3"></label>
+        <div class="col-md-1"><input asp-for="GroupByAction" class="" type="checkbox" /></div>
+        <div class="col-md-8"><span asp-validation-for="GroupByAction" class="text-danger col-md-8"></span></div>
+    </div>
+    @if (!Model.UserMode)
+    {
+        <div class="form-group row">
+            <label asp-for="GroupByUser" class="control-label col-md-3"></label>
+            <div class="col-md-1"><input asp-for="GroupByUser" class="" type="checkbox" /></div>
+            <div class="col-md-8"><span asp-validation-for="GroupByUser" class="text-danger col-md-8"></span></div>
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="UserIds" value="@Model.UserIds[0]" />
+    }
+    @if (!Model.PartnerMode)
+    {
+        <div class="form-group row">
+            <label asp-for="GroupByPartner" class="control-label col-md-3"></label>
+            <div class="col-md-1"><input asp-for="GroupByPartner" class="" type="checkbox" /></div>
+            <div class="col-md-8"><span asp-validation-for="GroupByPartner" class="text-danger"></span></div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="GroupByPartnerType" class="control-label col-md-3"></label>
+            <div class="col-md-1"><input asp-for="GroupByPartnerType" class="" type="checkbox" /></div>
+            <div class="col-md-8"><span asp-validation-for="GroupByPartnerType" class="text-danger col-md-8"></span></div>
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="PartnerIds" value="@Model.PartnerIds[0]" />
+    }
+
+    <div class="form-group row">
+        <label asp-for="DateFrom" class="control-label col-md-3"></label>
+        <div class="col-md-2"><input asp-for="DateFrom" class="form-control" type="date" /></div>
+        <div class="col-md-7"><span asp-validation-for="DateFrom" class="text-danger"></span></div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="DateTo" class="control-label col-md-3"></label>
+        <div class="col-md-2"><input asp-for="DateTo" class="form-control" type="date" /></div>
+        <div class="col-md-7"><span asp-validation-for="DateTo" class="text-danger"></span></div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Build Report" class="btn btn-default" />
+    </div>
+</form>

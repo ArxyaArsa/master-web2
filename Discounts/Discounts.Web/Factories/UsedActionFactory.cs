@@ -56,7 +56,7 @@ namespace Discounts.Web.Factories
                 throw new InvalidOperationException(ServicesConstants.CreateUsedAction_NotAllowedReasonMessage_MapAlreadyExists);
 
             var dModel = _mapper.Map<UsedActionModel, UsedAction>(model);
-            //dModel.CreatedDate = DateTime.UtcNow;
+            dModel.DateCreated = DateTime.UtcNow;
 
             var ret = _service.Create(dModel);
 
@@ -103,6 +103,8 @@ namespace Discounts.Web.Factories
                 ActionId = x.ActionId,
                 ActionName = x.Action.Name,
                 ActionValue = x.ActionValue,
+                OriginalValue = x.OriginalValue,
+                DateCreated = x.DateCreated,
                 PartnerId = x.PartnerId,
                 PartnerName = x.Partner.Name,
                 UserId = x.UserId,
