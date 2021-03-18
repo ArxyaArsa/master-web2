@@ -12,5 +12,6 @@ namespace Discounts.DataLayer.Models
         public virtual Partner Partner { get; set; }
         public virtual ICollection<UsedAction> UsedActions { get; set; }
         public virtual ICollection<DiscountsUserRole> UserRoleMaps { get; set; }
+        public virtual ICollection<Report> ReportsOfMyCreation { get; set; }
     }
 }

@@ -38,6 +38,12 @@ namespace Discounts.Services.Models
                 .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoleMaps.Select(x => x.Role.Name).ToList()));
 
             CreateMap<DiscountsRole, RoleModel>();
+
+            CreateMap<Report, ReportModel>()
+                .ForMember(d => d.PartnerName, o => o.MapFrom(s => s.Partner.Name))
+                .ForMember(d => d.DiscountsUserName, o => o.MapFrom(s => s.DiscountsUser.UserName));
+            CreateMap<ReportModel, Report>();
+
         }
     }
 }

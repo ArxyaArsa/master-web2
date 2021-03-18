@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ReportModel>
+@{ 
+    int r = 0;
+}
+<table class="table" data-id="partnersTable">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.DiscountsUserName)</th>
+            <th>@Html.DisplayNameFor(model => model.PartnerName)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="report-row @(r++ % 2 == 1 ? "odd" : "even")" data-report-id="@(item.Id)">
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.DiscountsUserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.PartnerName)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                <td><button class="download-report" data-report-id="@(item.Id)">Download <span class="glyphicon-download"></span></button></td>
+            </tr>
+        }
+    </tbody>
+</table>

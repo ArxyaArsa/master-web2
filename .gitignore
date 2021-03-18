@@ -1,3 +1,4 @@
 /Discounts/*/bin/*
 /Discounts/*/obj/*
 /Discounts/.vs/*
+/Discounts/Discounts.Web/App_Data/*

@@ -1,4 +1,7 @@
-﻿using Discounts.Services.Interfaces;
+﻿using AutoMapper;
+using Discounts.DataLayer.Models;
+using Discounts.Services.Interfaces;
+using Discounts.Services.Models;
 using Discounts.Web.Models.Report;
 using System;
 using System.Collections.Generic;
@@ -11,18 +14,48 @@ namespace Discounts.Web.Factories
     {
         #region construct and dependencies
         private readonly IUsedActionService _usedActionservice;
-        private readonly IPartnerService _partnerService;
-        private readonly IActionService _actionService;
-        private readonly IUserService _userService;
+        private readonly IReportService _reportService;
+        private readonly IMapper _mapper;
 
-        public ReportFactory(IUsedActionService usedActionservice, IPartnerService partnerService, IActionService actionService, IUserService userService)
+        public ReportFactory(IUsedActionService usedActionservice, IReportService reportService, IMapper mapper)
         {
             _usedActionservice = usedActionservice;
-            _partnerService = partnerService;
-            _actionService = actionService;
-            _userService = userService;
+            _reportService = reportService;
+            _mapper = mapper;
         }
         #endregion
+
+        public ReportModel CreateReport(ReportModel report)
+        {
+            var entry = _mapper.Map<ReportModel, Report>(report);
+
+            entry = _reportService.CreateReport(entry);
+
+            report.Id = entry.Id;
+
+            return report;
+        }
+
+        public IEnumerable<ReportModel> GetAllReports()
+        {
+            return _reportService.GetReports().Select(x => _mapper.Map<Report, ReportModel>(x)).AsEnumerable();
+        }
+
+        public ReportModel GetReport(int? id)
+        {
+            return _mapper.Map<Report, ReportModel>(_reportService.GetReports().FirstOrDefault(x => x.Id == id));
+        }
+
+        public IEnumerable<ReportModel> GetReportsForUser(int? userId)
+        {
+            return _reportService.GetReports().Where(x => x.DiscountsUserId == userId).Select(x => _mapper.Map<Report, ReportModel>(x)).AsEnumerable();
+        }
+
+        public IEnumerable<ReportModel> GetPartnerReports(int? partnerId)
+        {
+            return _reportService.GetReports().Where(x => x.PartnerId == partnerId).Select(x => _mapper.Map<Report, ReportModel>(x)).AsEnumerable();
+        }
+
 
         public IEnumerable<ReportRecord> GenerateReportData(ReportFilterModel filter)
         {
@@ -43,7 +76,7 @@ namespace Discounts.Web.Factories
                 UserName = g.Key.user,
                 PartnerName = g.Key.partner,
                 PartnerTypeName = g.Key.partnerType,
-                OriginalValue = g.Sum(x => x.originalValue),
+                OriginalValue = g.Sum(x => x.originalValue ?? 0),
                 ActionValue = g.Sum(x => x.actionValue)
             }).AsEnumerable();
         }

@@ -103,7 +103,7 @@ namespace Discounts.Web.Factories
                 ActionId = x.ActionId,
                 ActionName = x.Action.Name,
                 ActionValue = x.ActionValue,
-                OriginalValue = x.OriginalValue,
+                OriginalValue = x.OriginalValue ?? 0,
                 DateCreated = x.DateCreated,
                 PartnerId = x.PartnerId,
                 PartnerName = x.Partner.Name,

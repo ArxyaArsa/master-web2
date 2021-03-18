@@ -18,6 +18,7 @@ namespace Discounts.DataLayer
         public DbSet<PartnerType> PartnerType { get; set; }
         public DbSet<PartnerActionMap> PartnerActionMap { get; set; }
         public DbSet<UsedAction> UsedAction { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -46,6 +47,7 @@ namespace Discounts.DataLayer
             modelBuilder.ApplyConfiguration(new PartnerTypeConfig());
             modelBuilder.ApplyConfiguration(new PartnerConfig());
             modelBuilder.ApplyConfiguration(new UsedActionConfig());
+            modelBuilder.ApplyConfiguration(new ReportConfig());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
