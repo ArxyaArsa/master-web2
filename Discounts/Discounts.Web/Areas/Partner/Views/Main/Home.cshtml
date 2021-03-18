@@ -50,4 +50,12 @@
     </dl>
 </div>
 
+<br />
+<br />
+
+@if (TempData["Message"] != null)
+{
+<label class="text-success">@TempData["Message"]</label>
+}
+
 <script src="~/js/Partner/PartnerHome.js" type="text/javascript"></script>

@@ -33,35 +33,6 @@ namespace Discounts.Web.Helpers
                 workbookPart.Workbook.Save();
             }
 
-            //using (var document = SpreadsheetDocument.Open(file, true))
-            //{
-            //    var worksheetPart = document.WorkbookPart.WorksheetParts.First();
-            //    var sheetData = worksheetPart.Worksheet.AppendChild(new SheetData());
-            //
-            //    int columnCount = 0;
-            //
-            //    var hRow = new Row();
-            //    if (filter.GroupByPartnerType) { hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("Partner Type") } }); columnCount++; }
-            //    if (filter.GroupByPartner) { hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("Partner") } }); columnCount++; }
-            //    if (filter.GroupByUser) { hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("User") } }); columnCount++; }
-            //    if (filter.GroupByAction) { hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("Action") } }); columnCount++; }
-            //    hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("Original Value") } }); columnCount++;
-            //    hRow.Append(new Cell { InlineString = new InlineString() { Text = new Text("Discount") } }); columnCount++;
-            //    sheetData.AppendChild(hRow);
-            //
-            //    foreach (var r in records)
-            //    {
-            //        var row = new Row();
-            //        if (filter.GroupByPartnerType) row.Append(new Cell { InlineString = new InlineString() { Text = new Text(r.PartnerTypeName ?? "") } });
-            //        if (filter.GroupByPartner) row.Append(new Cell { InlineString = new InlineString() { Text = new Text(r.PartnerName ?? "") } });
-            //        if (filter.GroupByUser) row.Append(new Cell { InlineString = new InlineString() { Text = new Text(r.UserName ?? "") } });
-            //        if (filter.GroupByAction) row.Append(new Cell { InlineString = new InlineString() { Text = new Text(r.ActionName ?? "") } });
-            //        row.Append(new Cell { CellValue = new CellValue(r.OriginalValue) });
-            //        row.Append(new Cell { CellValue = new CellValue(r.ActionValue) });
-            //        sheetData.AppendChild(row);
-            //    }
-            //}
-
             using (var document = SpreadsheetDocument.Open(file, true))
             {
                 var worksheetPart = document.WorkbookPart.WorksheetParts.First();

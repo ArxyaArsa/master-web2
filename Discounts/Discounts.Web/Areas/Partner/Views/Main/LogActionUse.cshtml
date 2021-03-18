@@ -1,0 +1,69 @@
+﻿@model LogActionUseModel
+
+@{
+    var users = ViewBag.Users ;
+    var actions = ViewBag.Actions;
+}
+
+<h2>Log Action Use</h2>
+
+<form asp-action="SubmitActionUse" asp-controller="Main" asp-area="Partner">
+    <div class="text-danger">@(ViewBag.Errors ?? "")</div>
+    <div class="row"><h4>Step 1a: Enter User Code</h4></div>
+    <div class="form-group row">
+        <label asp-for="UserCode" class="control-label col-md-3"></label>
+        <div class="col-md-3"><input asp-for="UserCode" class="form-control" type="text" value="@(Model?.UserCode ?? "")" /></div>
+        <div class="col-md-6"><span asp-validation-for="UserCode" class="text-danger"></span></div>
+    </div>
+    <br />
+    <div class="row"><h4>Step 1b: Choose User and Action</h4></div>
+    <div class="form-group row">
+        <label asp-for="UserId" class="control-label col-md-3"></label>
+        <div class="col-md-3">
+            <select asp-for="UserId" class="form-control">
+                <option value="">-</option>
+                @foreach (var user in users)
+                {
+                    if (user.Id == Model?.UserId)
+                    {
+                        <option value="@user.Id" selected>@user.UserName</option>
+                    }
+                    else
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-6"><span asp-validation-for="UserId" class="text-danger"></span></div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="ActionId" class="control-label col-md-3"></label>
+        <div class="col-md-3">
+            <select asp-for="ActionId" class="form-control">
+                <option value="">-</option>
+                @foreach (var action in actions)
+                {
+                    if (action.Id == Model?.ActionId)
+                    {
+                        <option value="@action.Id" selected>@action.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@action.Id">@action.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-6"><span asp-validation-for="ActionId" class="text-danger"></span></div>
+    </div>
+    <div class="row"><h4>Step 2: Enter the purchase amount</h4></div>
+    <div class="form-group row">
+        <label asp-for="OriginalValue" class="control-label col-md-3"></label>
+        <div class="col-md-3"><input asp-for="OriginalValue" class="form-control" type="number" value="@(Model?.OriginalValue != null ? Model.OriginalValue.ToString() : "")" /></div>
+        <div class="col-md-6"><span asp-validation-for="OriginalValue" class="text-danger"></span></div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-default" />
+    </div>
+</form>

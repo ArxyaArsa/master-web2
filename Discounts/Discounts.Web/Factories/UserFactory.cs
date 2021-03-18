@@ -25,6 +25,12 @@ namespace Discounts.Web.Factories
             return _userService.GetUsers().Select(x => _mapper.Map<DiscountsUser, UserModel>(x)).AsEnumerable();
         }
 
+        // unsafe - doesn't check role existance
+        public IEnumerable<UserModel> GetAllUsersInRole(string role)
+        {
+            return _userService.GetRoles().Where(x => x.Name == role).First().UserRoleMaps.Select(x => _mapper.Map<DiscountsUser, UserModel>(x.User)).AsEnumerable();
+        }
+
         public UserModel GetUser(int? id)
         {
             return _mapper.Map<DiscountsUser, UserModel>(_userService.GetUsers().FirstOrDefault(x => x.Id == id));
