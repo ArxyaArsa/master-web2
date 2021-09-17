@@ -35,39 +35,60 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Discounts</a>
+                <a asp-area="" asp-controller="Home" asp-action="Start" class="navbar-brand">Discounts</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    @if (isAdmin && !adminArea)
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
+                    @if (isAdmin)
                     {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle"><strong>Admin</strong> <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <partial name="_AdminLinks" />
-                            </ul>
-                        </li>
+                        @if (!adminArea)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle"><strong>Admin</strong> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <partial name="_AdminLinks" />
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a href="#" style="text-decoration: underline">Admin</a></li>
+                        }
                     }
-                    @if ((isAdmin || isUser) && !userArea)
+                    @if ((isAdmin || isUser))
                     {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle"><strong>User</strong> <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <partial name="_UserLinks" />
-                            </ul>
-                        </li>
+                        @if (!userArea)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle"><strong>User</strong> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <partial name="_UserLinks" />
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a href="#" style="text-decoration: underline">User</a></li>
+                        }
                     }
-                    @if ((isAdmin || isPartner) && !partnerArea)
+                    @if ((isAdmin || isPartner))
                     {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle"><strong>Partner</strong> <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <partial name="_PartnerLinks" />
-                            </ul>
-                        </li>
+                        @if (!partnerArea)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle"><strong>Partner</strong> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <partial name="_PartnerLinks" />
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a href="#" style="text-decoration: underline">Partner</a></li>
+                        }
                     }
                     @if (isAdmin || isPartner || isUser)
                     {

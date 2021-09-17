@@ -1,4 +1,5 @@
-﻿using Discounts.Web.Models;
+﻿using Discounts.Web.Helpers;
+using Discounts.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Discounts.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Start");
         }
 
         public IActionResult About()
@@ -38,6 +39,18 @@ namespace Discounts.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Start()
+        {
+            if (User.IsInRole(WebConstants.AdminRole))
+                return RedirectToAction("Index", "Users", new { area = "Admin" });
+            else if (User.IsInRole(WebConstants.PartnerRole))
+                return RedirectToAction("Index", "Main", new { area = "Partner" });
+            else if (User.IsInRole(WebConstants.UserRole))
+                return RedirectToAction("ViewByCategory", "Main", new { area = "User" });
+            else
+                return RedirectToAction("Login", "Account", new { area = "Identity" });
         }
     }
 }

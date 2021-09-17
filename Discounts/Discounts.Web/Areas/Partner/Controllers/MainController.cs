@@ -189,7 +189,7 @@ namespace Discounts.Web.Areas.Partner.Controllers
         {
             int partnerId = -1;
             var user = _userFactory.GetUser(User.Identity.Name);
-            if (User.IsInRole(WebConstants.PartnerRole))
+            if (User.IsInRole(WebConstants.PartnerRole) || User.IsInRole(WebConstants.AdminRole))
             {
                 if (user.PartnerId == null)
                 {
@@ -216,7 +216,7 @@ namespace Discounts.Web.Areas.Partner.Controllers
         {
             int partnerId = -1;
             var user = _userFactory.GetUser(User.Identity.Name);
-            if (User.IsInRole(WebConstants.PartnerRole))
+            if (User.IsInRole(WebConstants.PartnerRole) || User.IsInRole(WebConstants.AdminRole))
             {
                 if (user.PartnerId == null)
                 {
@@ -262,7 +262,7 @@ namespace Discounts.Web.Areas.Partner.Controllers
                 if (passedUser == null)
                     throw new Exception("No such User");
                 if (!passedUser.Roles.Contains(WebConstants.UserRole))
-                    throw new Exception("The User you are trying to bind the Discount to isn't a regular User");
+                    throw new Exception("The User you are trying to bind the Discount to isn't a regular User or the User Code is invalid");
 
                 var action = _partnerActionMapFactory.GetActionsForPartnerActionsView(partnerId, user.Id).Where(x => x.Id == actionId).FirstOrDefault();
                 if (action == null)

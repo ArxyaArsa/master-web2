@@ -81,11 +81,11 @@ namespace Discounts.Web
             {
                 routes.MapRoute(
                   name: "areas",
-                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                  template: "{area:exists}/{controller=Home}/{action=Start}/{id?}"
                 );
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Start}/{id?}");
             });
         }
     }
